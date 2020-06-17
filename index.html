@@ -144,6 +144,131 @@
             
 
   
+    <article id="post-DHCP原理与配置" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+  
+  
+    <h1 itemprop="name">
+	
+	  <a class="article-title" href="/2020/06/17/DHCP%E5%8E%9F%E7%90%86%E4%B8%8E%E9%85%8D%E7%BD%AE/" target="_blank">DHCP原理与配置</a>
+  
+    </h1>
+  
+
+
+  
+  
+<a href="/2020/06/17/DHCP%E5%8E%9F%E7%90%86%E4%B8%8E%E9%85%8D%E7%BD%AE/" class="archive-article-date">
+        <time datetime="2020-06-17T14:07:56.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-17</time>
+</a>
+
+  
+  
+    
+
+  
+  </header>
+  
+  <div class="article-entry" itemprop="articleBody">
+    
+    <h3 id="DHCP工作原理"><a href="#DHCP工作原理" class="headerlink" title="DHCP工作原理"></a>DHCP工作原理</h3><p>动态主机设置协定（DHCP）是一种使网络管理员能够集中管理和自动分配IP网络地址的通信协议。在IP网络中，每个连接Internet的设备都需要分配唯一的IP地址。DHCP使网络管理员能从中心结点监控和分配IP地址。当某台计算机移到网络中的其它位置时，能自动收到新的IP地址。</p>
+<p>DHCP使用了租约的概念，或称为计算机IP地址的有效期。租用时间是不定的，主要取决于用户在某地联接Internet需要多久，这对于教育行业和其它用户频繁改变的环境是很实用的。通过较短的租期，DHCP能够在一个计算机比可用IP地址多的环境中动态地重新配置网络。DHCP支持为计算机分配静态地址，如需要永久性IP地址的Web服务器。</p>
+<h3 id="DHCP的优势"><a href="#DHCP的优势" class="headerlink" title="DHCP的优势"></a>DHCP的优势</h3><p>减少管理员的工作量<br>避免IP地址冲突<br>当网络更改IP地址段时，不需要再重新配置每个用户的IP地址<br>提高了IP地址的利用率<br>方便客户端的配置</p>
+<h3 id="DHCP租约过程"><a href="#DHCP租约过程" class="headerlink" title="DHCP租约过程"></a>DHCP租约过程</h3><p>客户机从DHCP服务器获得IP地址的过程称为DHCP的租约过程。<br>租约过程分为四个步骤：</p>
+<p>第一步：<br>客户机请求IP地址<br>当一个DHCP客户机启动时，客户机还没有IP地址，所以客户机要通过DHCP获取一个合法的地址<br>此时DHCP客户机以广播方式发送DHCP Discover发现信息来寻找DHCP服务器。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">源地址：0.0.0.0</span><br><span class="line">目的地址：255.255.255.255（广播）</span><br></pre></td></tr></table></figure>
+<p>第二步：<br>服务器响应<br>当DHCP服务器接收到来自客户机请求IP地址的信息时，它就在自己的IP地址池中查找是否有合法的<br>IP地址提供给客户机，如果有，DHCP服务器就将此IP地址做上标记，加入到DHCP Offer的消息中，<br>然后DHCP服务器就广播一则DHCP Offer消息。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">源地址：服务器的IP地址</span><br><span class="line">目的地址：255.255.255.255（广播）</span><br><span class="line">携带地址：预分配IP地址</span><br></pre></td></tr></table></figure>
+<p>第三步：<br>客户机选择IP地址<br>DHCP客户机从接收到的第一个DHCP Offer消息中提取IP地址，发出IP地址的DHCP服务器将该地址保留，<br>这样该地址就不能再分配给另一个DHCP客户机。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">源地址：0.0.0.0</span><br><span class="line">目标地址：255.255.255.255</span><br></pre></td></tr></table></figure>
+<p>第四步：<br>服务器确定租约<br>DHCP服务器接收到DHCP Request消息后，以DHCP ACK消息的形式向客户机广播成功确认，该消息包含有<br>IP地址的有效租约和其他可配置的信息。<br>当客户机收到DHCP ACK消息时，它就配置了IP地址，完成TCP/IP的初始化。</p>
+<p>第五步：<br>更新登录<br>DHCP客户机每次重新登录网络时，不需要再发送DHCP Discover信息，而是直接发送包含前一次所分配的<br>IP地址的DHCP Request请求信息。</p>
+<p>第六步：<br>更新租约<br>当DHCP服务器向客户机出租的IP地址租期达到50%时，就需要更新租约。<br>客户机直接向提供租约的服务器发送DHCP Request包，要求更新现有的地址租约。</p>
+<h3 id="DHCP服务"><a href="#DHCP服务" class="headerlink" title="DHCP服务"></a>DHCP服务</h3><p>为大量客户机自动分配地址，提供集中管理。<br>减轻管理和维护成本、提高网络配置效率。</p>
+<h3 id="可分配的地址信息主要包括"><a href="#可分配的地址信息主要包括" class="headerlink" title="可分配的地址信息主要包括"></a>可分配的地址信息主要包括</h3><p>网卡的IP地址、子网掩码<br>对应的网络地址、广播地址<br>默认网关地址<br>DNS服务器地址</p>
+<h3 id="安装-DHCP-服务器"><a href="#安装-DHCP-服务器" class="headerlink" title="安装 DHCP 服务器"></a>安装 DHCP 服务器</h3><p>第一种：rpm安装方式（手动解决依赖关系）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@www Packages]<span class="comment"># rpm -ivh dhcp-4.2.5-68.el7.centos.x86_64.rpm</span></span><br></pre></td></tr></table></figure>
+<p>第二种：YUM方式安装（自动解决依赖关系，配置仓库）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@www ~]<span class="comment"># cd /etc/yum.repos.d/</span></span><br><span class="line">[root@www yum.repos.d]<span class="comment"># ls</span></span><br><span class="line">CentOS-Base.repo  CentOS-Debuginfo.repo  CentOS-Media.repo    CentOS-Vault.repo</span><br><span class="line">CentOS-CR.repo    CentOS-fasttrack.repo  CentOS-Sources.repo</span><br><span class="line">[root@www yum.repos.d]<span class="comment"># yum clean all   //清空yum缓存</span></span><br><span class="line">[root@www yum.repos.d]<span class="comment"># yum repolist    //列出所有可用仓库</span></span><br><span class="line">[root@www yum.repos.d]<span class="comment"># yum install -y dhcp  //yum按照dhcp服务器软件</span></span><br><span class="line">[root@www yum.repos.d]<span class="comment"># rpm -qc dhcp    //查看DHCP服务器配置文件</span></span><br></pre></td></tr></table></figure>
+
+<p>DHCP服务器软件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">CentOS光盘中的 dhcp-4.2.5-47.el7.centos.x86_64.rpm</span><br><span class="line">dhcp 软件包的主要文件</span><br><span class="line">主配置文件：/etc/dhcp/dhcpd.conf</span><br><span class="line">执行程序：/usr/sbin/dhcpd、/usr/sbin/dhcrelay</span><br><span class="line">执行参数配置：/etc/sysconfig/dhcpd</span><br></pre></td></tr></table></figure>
+
+<h3 id="主要配置文件"><a href="#主要配置文件" class="headerlink" title="主要配置文件"></a>主要配置文件</h3><p>dhcpd.conf 的内容构成</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># DHCP Server Configuration file.</span></span><br><span class="line"><span class="comment">#   see /usr/share/doc/dhcp*/dhcpd.conf.example</span></span><br><span class="line"><span class="comment">#   see dhcpd.conf(5) man page</span></span><br><span class="line"><span class="comment">#</span></span><br></pre></td></tr></table></figure>
+<p>修改配置文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">option domain-name <span class="string">"kgc.com"</span>;</span><br><span class="line">option domain-name-servers www.kgc.com;</span><br><span class="line">default-lease-time 86400;</span><br><span class="line">max-lease-time 86400;</span><br><span class="line">subnet 192.168.100.0 netmask 255.255.255.0 &#123;</span><br><span class="line">        range 192.168.100.100 192.168.100.150;</span><br><span class="line">        option routers 192.168.100.2;</span><br></pre></td></tr></table></figure>
+<p>Subnet 网段声明，作用于整个子网段</p>
+<p>range 参数：设置用于分配的 IP 地址池<br>option subnet-mask 参数：设置客户机的子网掩码<br>option routers 参数：设置客户机的默认网关地址</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># vi /etc/dhcp/dhcpd.conf</span></span><br><span class="line">subnet 192.168.4.0 netmask 255.255.255.0 &#123;                     </span><br><span class="line">     range       192.168.4.128 192.168.4.131;                  </span><br><span class="line">     option subnet-mask        255.255.255.0;                  </span><br><span class="line">     option routers            192.168.4.1;</span><br></pre></td></tr></table></figure>
+
+<p>host 主机声明，作用于单个主机<br>hardware ethernet 参数：指定对应主机的 MAC 地址<br>fixed-address 参数：指定为该主机保留的 IP 地址</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">host prtsvr &#123;</span><br><span class="line">    hardware ethernet 00:c0:c3:22:46:81;</span><br><span class="line">    fixed-address 192.168.4.100;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="启动-DHCP-服务"><a href="#启动-DHCP-服务" class="headerlink" title="启动 DHCP 服务"></a>启动 DHCP 服务</h3><p>查看租约文件 /var/lib/dhcpd/dhcpd.lease</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[ root@localhost ~]<span class="comment"># less /var/lib/dhcpd/dhcpd.leases</span></span><br><span class="line">……</span><br><span class="line">lease 192.168.4.131 &#123;            //分配的客户端IP</span><br><span class="line"> starts 4 2017/05/11 17:27:15;   //租期时间</span><br><span class="line">  ends 4 2017/05/11 23:27:15;</span><br><span class="line">  cltt 4 2017/05/11 17:27:15;</span><br><span class="line">  binding state active;</span><br><span class="line">  next binding state free;</span><br><span class="line">  hardware ethernet 00:0c:29:3b:ff:76;     //客户端MAC地址</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="使用-DHCP-客户端"><a href="#使用-DHCP-客户端" class="headerlink" title="使用 DHCP 客户端"></a>使用 DHCP 客户端</h3><p>两种使用方式<br>1）修改网卡配置文件 （如 ifcfg-ens33）<br>    BOOTPROTO=dhcp</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># vi /etc/sysconfig/network-scripts/ifcfg-ens33</span></span><br><span class="line">DEVICE=ens33</span><br><span class="line">ONBOOT=yes</span><br><span class="line">BOOTPROTO=dhcp</span><br><span class="line">[root@localhost ~]<span class="comment"># ifdown ens33 ; ifup ens33</span></span><br></pre></td></tr></table></figure>
+
+<p>2）使用dhclient 命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dhclient [-d] [网络接口名]</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># dhclient -d ens33	\\ dhclient -r </span></span><br><span class="line">……  	</span><br><span class="line">Listening on LPF/ens33/00:0c:29:3b:ff:76</span><br><span class="line">Sending on   LPF/ens33/00:0c:29:3b:ff:76</span><br><span class="line">Sending on   Socket/fallback</span><br><span class="line">DHCPDISCOVER on ens33 to 255.255.255.255 port 67 interval 5 (xid=0x608095ef)      \\DHCP 发现</span><br><span class="line">DHCPREQUEST on ens33 to 255.255.255.255 port 67 (xid=0x608095ef)                  \\DHCP 请求</span><br><span class="line">DHCPOFFER from 192.168.4.11	                                                     \\DHCP 提供</span><br><span class="line">DHCPACK from 192.168.4.11 (xid=0x608095ef)                                      \\DHCP 确认</span><br><span class="line">bound to 192.168.4.131 -- renewal <span class="keyword">in</span> 8669 seconds.</span><br><span class="line">……</span><br></pre></td></tr></table></figure>
+
+<h3 id="DHCP-中继原理"><a href="#DHCP-中继原理" class="headerlink" title="DHCP 中继原理"></a>DHCP 中继原理</h3><p>当企业的内部网络规模较大时，通常被划分为多个不同的子网，网络内配置了VLAN，VLAN能隔离广播，而DHCP协议使用广播<br>DHCP服务器在VLAN 100中，就只有VLAN 100内的客户机能从DHCP服务器那里获取IP地址<br>如果VLAN 2或VLAN 3的客户机也需要通过这台DHCP服务器来获取IP地址，该怎么办呢？</p>
+
+    
+
+    
+
+    
+
+  </div>
+  <div class="article-info article-info-index">
+    
+    
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">DHCP</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+    
+
+    
+
+    
+    <div class="clearfix"></div>
+  </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-linux网络设置" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -152,7 +277,7 @@
   
     <h1 itemprop="name">
 	
-	  <a class="article-title" href="/2020/06/17/linux%E7%BD%91%E7%BB%9C%E8%AE%BE%E7%BD%AE/" target="_blank">linux网络设置</a>
+	  <a class="article-title" href="/2020/06/16/linux%E7%BD%91%E7%BB%9C%E8%AE%BE%E7%BD%AE/" target="_blank">linux网络设置</a>
   
     </h1>
   
@@ -160,8 +285,8 @@
 
   
   
-<a href="/2020/06/17/linux%E7%BD%91%E7%BB%9C%E8%AE%BE%E7%BD%AE/" class="archive-article-date">
-        <time datetime="2020-06-17T09:18:52.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-17</time>
+<a href="/2020/06/16/linux%E7%BD%91%E7%BB%9C%E8%AE%BE%E7%BD%AE/" class="archive-article-date">
+        <time datetime="2020-06-16T14:07:56.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-16</time>
 </a>
 
   
@@ -226,6 +351,17 @@
   <div class="article-info article-info-index">
     
     
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">linux</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
     
 
     
@@ -355,6 +491,14 @@
             <input type="checkbox" q-on="click:toggleTag(e)" q-attr="checked:showTags">
           </label>
           <ul class="article-tag-list" q-show="showTags">
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">DHCP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">linux</a>
+              </li>
             
             <div class="clearfix"></div>
           </ul>
