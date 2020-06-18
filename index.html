@@ -5,7 +5,7 @@
   
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
-  <link rel="dns-prefetch" href="http://yoursite.com">
+  <link rel="dns-prefetch" href="http://zzeluo.github.io">
   <title>择萝</title>
   <meta name="generator" content="hexo-theme-yilia-plus">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -16,7 +16,7 @@
   
   <meta property="og:type" content="website">
 <meta property="og:title" content="择萝">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta property="og:url" content="http://zzeluo.github.io/index.html">
 <meta property="og:site_name" content="择萝">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:author" content="择萝">
@@ -144,6 +144,76 @@
             
 
   
+    <article id="post-ttt" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+  
+  
+    <h1 itemprop="name">
+	
+	  <a class="article-title" href="/2020/06/18/ttt/" target="_blank">ttt</a>
+  
+    </h1>
+  
+
+
+  
+  
+<a href="/2020/06/18/ttt/" class="archive-article-date">
+        <time datetime="2020-06-18T07:53:48.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-18</time>
+</a>
+
+  
+  
+    
+
+  
+  </header>
+  
+  <div class="article-entry" itemprop="articleBody">
+    
+    <img src="/.io//06/18/ttt/timg.jpg" class title="This is an example image">
+    
+
+    
+
+    
+
+  </div>
+  <div class="article-info article-info-index">
+    
+    
+    
+
+    
+
+    
+    <div class="clearfix"></div>
+  </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-DHCP原理与配置" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -176,7 +246,7 @@
     <h3 id="DHCP工作原理"><a href="#DHCP工作原理" class="headerlink" title="DHCP工作原理"></a>DHCP工作原理</h3><p>动态主机设置协定（DHCP）是一种使网络管理员能够集中管理和自动分配IP网络地址的通信协议。在IP网络中，每个连接Internet的设备都需要分配唯一的IP地址。DHCP使网络管理员能从中心结点监控和分配IP地址。当某台计算机移到网络中的其它位置时，能自动收到新的IP地址。</p>
 <p>DHCP使用了租约的概念，或称为计算机IP地址的有效期。租用时间是不定的，主要取决于用户在某地联接Internet需要多久，这对于教育行业和其它用户频繁改变的环境是很实用的。通过较短的租期，DHCP能够在一个计算机比可用IP地址多的环境中动态地重新配置网络。DHCP支持为计算机分配静态地址，如需要永久性IP地址的Web服务器。</p>
 <h3 id="DHCP的优势"><a href="#DHCP的优势" class="headerlink" title="DHCP的优势"></a>DHCP的优势</h3><p>减少管理员的工作量<br>避免IP地址冲突<br>当网络更改IP地址段时，不需要再重新配置每个用户的IP地址<br>提高了IP地址的利用率<br>方便客户端的配置</p>
-<h3 id="DHCP租约过程"><a href="#DHCP租约过程" class="headerlink" title="DHCP租约过程"></a>DHCP租约过程</h3><p>客户机从DHCP服务器获得IP地址的过程称为DHCP的租约过程。<br>租约过程分为四个步骤：<br><img src="/.com//0.png" alt="DHCP租约过程"><br>第一步：<br>客户机请求IP地址<br>当一个DHCP客户机启动时，客户机还没有IP地址，所以客户机要通过DHCP获取一个合法的地址<br>此时DHCP客户机以广播方式发送DHCP Discover发现信息来寻找DHCP服务器。</p>
+<h3 id="DHCP租约过程"><a href="#DHCP租约过程" class="headerlink" title="DHCP租约过程"></a>DHCP租约过程</h3><p>客户机从DHCP服务器获得IP地址的过程称为DHCP的租约过程。<br>租约过程分为四个步骤：<br><img src="/.com//timg1.jpg" alt="租约过程"><br>第一步：<br>客户机请求IP地址<br>当一个DHCP客户机启动时，客户机还没有IP地址，所以客户机要通过DHCP获取一个合法的地址<br>此时DHCP客户机以广播方式发送DHCP Discover发现信息来寻找DHCP服务器。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">源地址：0.0.0.0</span><br><span class="line">目的地址：255.255.255.255（广播）</span><br></pre></td></tr></table></figure>
 <p>第二步：<br>服务器响应<br>当DHCP服务器接收到来自客户机请求IP地址的信息时，它就在自己的IP地址池中查找是否有合法的<br>IP地址提供给客户机，如果有，DHCP服务器就将此IP地址做上标记，加入到DHCP Offer的消息中，<br>然后DHCP服务器就广播一则DHCP Offer消息。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">源地址：服务器的IP地址</span><br><span class="line">目的地址：255.255.255.255（广播）</span><br><span class="line">携带地址：预分配IP地址</span><br></pre></td></tr></table></figure>
@@ -215,7 +285,12 @@
 
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># dhclient -d ens33	\\ dhclient -r </span></span><br><span class="line">……  	</span><br><span class="line">Listening on LPF/ens33/00:0c:29:3b:ff:76</span><br><span class="line">Sending on   LPF/ens33/00:0c:29:3b:ff:76</span><br><span class="line">Sending on   Socket/fallback</span><br><span class="line">DHCPDISCOVER on ens33 to 255.255.255.255 port 67 interval 5 (xid=0x608095ef)      \\DHCP 发现</span><br><span class="line">DHCPREQUEST on ens33 to 255.255.255.255 port 67 (xid=0x608095ef)                  \\DHCP 请求</span><br><span class="line">DHCPOFFER from 192.168.4.11	                                                     \\DHCP 提供</span><br><span class="line">DHCPACK from 192.168.4.11 (xid=0x608095ef)                                      \\DHCP 确认</span><br><span class="line">bound to 192.168.4.131 -- renewal <span class="keyword">in</span> 8669 seconds.</span><br><span class="line">……</span><br></pre></td></tr></table></figure>
 
-<h3 id="DHCP-中继原理"><a href="#DHCP-中继原理" class="headerlink" title="DHCP 中继原理"></a>DHCP 中继原理</h3><p>当企业的内部网络规模较大时，通常被划分为多个不同的子网，网络内配置了VLAN，VLAN能隔离广播，而DHCP协议使用广播<br>DHCP服务器在VLAN 100中，就只有VLAN 100内的客户机能从DHCP服务器那里获取IP地址<br>如果VLAN 2或VLAN 3的客户机也需要通过这台DHCP服务器来获取IP地址，该怎么办呢？</p>
+<h3 id="DHCP-中继原理"><a href="#DHCP-中继原理" class="headerlink" title="DHCP 中继原理"></a>DHCP 中继原理</h3><p>当企业的内部网络规模较大时，通常被划分为多个不同的子网，网络内配置了VLAN，VLAN能隔离广播，而DHCP协议使用广播<br>DHCP服务器在VLAN 100中，就只有VLAN 100内的客户机能从DHCP服务器那里获取IP地址<br>如果VLAN 2或VLAN 3的客户机也需要通过这台DHCP服务器来获取IP地址，该怎么办呢？<br>解决的办法有两种：<br>1）为每个网段安装一台DHCP服务器，但这种方式存在资源上的浪费，而且不利于集中管理。<br>2）在连接不同网段的设备上开启DHCP中继功能，将DHCP这种特殊的广播信息在VLAN之间转发，让其他VLAN的客户机也能从DHCP服务器哪里获得IP地址。</p>
+<h3 id="DHCP中继的配置命令"><a href="#DHCP中继的配置命令" class="headerlink" title="DHCP中继的配置命令"></a>DHCP中继的配置命令</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ip helper-address DHCPsrv-IPAddress </span><br><span class="line">DHCPsrv-IPAddress 为DHCP服务器的IP地址</span><br></pre></td></tr></table></figure>
+<p>在三层交换机上配置DHCP中继转发，是在不包含DHCP服务器的VLAN上配置实现的</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">SW-3L(config)<span class="comment">#interface vlan 2        </span></span><br><span class="line">SW-3L(config-if)<span class="comment">#ip address 192.168.2.1 255.255.255.0</span></span><br><span class="line">SW-3L(config-if)<span class="comment">#ip helper-address 192.168.100.100   	</span></span><br><span class="line">SW-3L(config-if)<span class="comment">#no shutdown</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">SW-3L(config)<span class="comment">#interface vlan 3        </span></span><br><span class="line">SW-3L(config-if)<span class="comment">#ip address 192.168.3.1 255.255.255.0</span></span><br><span class="line">SW-3L(config-if)<span class="comment">#ip helper-address 192.168.100.100   	</span></span><br><span class="line">SW-3L(config-if)<span class="comment">#no shutdown</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SW-3L(config)<span class="comment">#interface vlan 100        </span></span><br><span class="line">SW-3L(config-if)<span class="comment">#ip address 192.168.100.1 255.255.255.0</span></span><br><span class="line">SW-3L(config-if)<span class="comment">#no shutdown</span></span><br></pre></td></tr></table></figure>
 
     
 
@@ -401,11 +476,11 @@
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2020 <a href="http://yoursite.com/" target="_blank">择萝</a>
+    		&copy; 2020 <a href="http://zzeluo.github.io/" target="_blank">择萝</a>
     	</div>
       	<div class="footer-right">
 			
-			
+			<!--<table>  </table>-->
       		GitHub:<a href="https://github.com/JoeyBling/hexo-theme-yilia-plus" target="_blank">hexo-theme-yilia-plus</a> by Litten
       	</div>
     </div>
