@@ -144,6 +144,100 @@
             
 
   
+    <article id="post-DHCP服务部署" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+  
+  
+    <h1 itemprop="name">
+	
+	  <a class="article-title" href="/2020/06/20/DHCP%E6%9C%8D%E5%8A%A1%E9%83%A8%E7%BD%B2/" target="_blank">DHCP服务部署</a>
+  
+    </h1>
+  
+
+
+  
+  
+<a href="/2020/06/20/DHCP%E6%9C%8D%E5%8A%A1%E9%83%A8%E7%BD%B2/" class="archive-article-date">
+        <time datetime="2020-06-20T02:00:53.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-20</time>
+</a>
+
+  
+  
+    
+
+  
+  </header>
+  
+  <div class="article-entry" itemprop="articleBody">
+    
+    <h3 id="DHCP服务器为不同网段自动分配IP地址"><a href="#DHCP服务器为不同网段自动分配IP地址" class="headerlink" title="DHCP服务器为不同网段自动分配IP地址"></a>DHCP服务器为不同网段自动分配IP地址</h3><p><img src="img/6.20.png" alt="pt拓扑图"><br>配置SW1</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">SW1&gt;en</span><br><span class="line">SW1<span class="comment">#conf t</span></span><br><span class="line">SW1(config)<span class="comment">#vlan 2</span></span><br><span class="line">SW1(config-vlan)<span class="comment">#ex</span></span><br><span class="line">SW1(config)<span class="comment">#vlan 10</span></span><br><span class="line">SW1(config-vlan)<span class="comment">#ex</span></span><br><span class="line">SW1(config)<span class="comment">#vlan 3</span></span><br><span class="line">SW1(config-vlan)<span class="comment">#ex</span></span><br><span class="line">SW1(config)<span class="comment">#int f0/1</span></span><br><span class="line">SW1(config-if)<span class="comment">#swi</span></span><br><span class="line">SW1(config-if)<span class="comment">#switchport mode access </span></span><br><span class="line">SW1(config-if)<span class="comment">#switchport access vlan 2</span></span><br><span class="line">SW1(config-if)<span class="comment">#ex</span></span><br><span class="line">SW1(config)<span class="comment">#int f0/2</span></span><br><span class="line">SW1(config-if)<span class="comment">#switchport mode access </span></span><br><span class="line">SW1(config-if)<span class="comment">#switchport access vlan 10</span></span><br><span class="line">SW1(config-if)<span class="comment">#ex</span></span><br><span class="line">SW1(config)<span class="comment">#int f0/4</span></span><br><span class="line">SW1(config-if)<span class="comment">#switchport mode access </span></span><br><span class="line">SW1(config-if)<span class="comment">#switchport access vlan 3</span></span><br><span class="line">SW1(config-if)<span class="comment">#ex</span></span><br><span class="line">SW1(config)<span class="comment">#int f0/3</span></span><br><span class="line">SW1(config-if)<span class="comment">#switchport mode trunk</span></span><br></pre></td></tr></table></figure>
+<p>配置SW2</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">SW2&gt;en</span><br><span class="line">SW2<span class="comment">#conf t</span></span><br><span class="line">SW2(config)<span class="comment">#vlan 2</span></span><br><span class="line">SW2(config-vlan)<span class="comment">#ex</span></span><br><span class="line">SW2(config)<span class="comment">#vlan 10</span></span><br><span class="line">SW2(config-vlan)<span class="comment">#ex</span></span><br><span class="line">SW2(config)<span class="comment">#vlan 3</span></span><br><span class="line">SW2(config-vlan)<span class="comment">#ex</span></span><br><span class="line">SW2(config)<span class="comment">#int vlan 2</span></span><br><span class="line">SW2(config-if)<span class="comment">#ip add 192.168.100.10 255.255.255.0</span></span><br><span class="line">SW2(config-if)<span class="comment">#no sh</span></span><br><span class="line">SW2(config-if)<span class="comment">#ip helper-address 192.168.30.1          //设置代理</span></span><br><span class="line">SW2(config-if)<span class="comment">#ex</span></span><br><span class="line">SW2(config)<span class="comment">#int vlan 10</span></span><br><span class="line">SW2(config-if)<span class="comment">#ip add 192.168.10.10 255.255.255.0</span></span><br><span class="line">SW2(config-if)<span class="comment">#ip helper-address 192.168.30.1</span></span><br><span class="line">SW2(config-if)<span class="comment">#no sh</span></span><br><span class="line">SW2(config-if)<span class="comment">#ex</span></span><br><span class="line">SW2(config)<span class="comment">#int vlan 3</span></span><br><span class="line">SW2(config-if)<span class="comment">#ip add 192.168.30.10 255.255.255.0</span></span><br><span class="line">SW2(config-if)<span class="comment">#no sh</span></span><br><span class="line">SW2(config-if)<span class="comment">#ex</span></span><br><span class="line">SW2(config)<span class="comment">#int f0/1</span></span><br><span class="line">SW2(config-if)<span class="comment">#switchport trunk encapsulation dot1q          //封装dot1q</span></span><br><span class="line">SW2(config-if)<span class="comment">#switchport mode trunk </span></span><br><span class="line">SW2(config-if)<span class="comment">#ex</span></span><br><span class="line">SW2(config)<span class="comment">#ip routing                                    //开启路由功能</span></span><br></pre></td></tr></table></figure>
+<h3 id="配置DHCP服务器"><a href="#配置DHCP服务器" class="headerlink" title="配置DHCP服务器"></a>配置DHCP服务器</h3><p>手工配置服务器IP地址<br><img src="mig/6.20.1.png" alt="手工配置服务器IP地址"><br>打开DHCP功能，配置分配地址和范围<br><img src="mig/6.20.2.png" alt="配置vlan2"><br><img src="mig/6.20.3.png" alt="配置vlan10"></p>
+<p>配置好以后自动获取的地址<br><img src="mig/6.20.4.png" alt="PC-PT"></p>
+<h3 id="GNS3-模拟配置DHCP服务器"><a href="#GNS3-模拟配置DHCP服务器" class="headerlink" title="GNS3 模拟配置DHCP服务器"></a>GNS3 模拟配置DHCP服务器</h3><p><img src="6.20.5.png" alt="GN3拓扑图"><br>Host1作为DHCP服务器为网段为150.0的Host2自动分配地址<br>首先修改交换机 SW 配置</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">SW<span class="comment">#vlan database </span></span><br><span class="line">SW(vlan)<span class="comment">#vlan 10</span></span><br><span class="line">VLAN 10 added:</span><br><span class="line">    Name: VLAN0010</span><br><span class="line">SW(vlan)<span class="comment">#vlan 11</span></span><br><span class="line">VLAN 11 added:</span><br><span class="line">    Name: VLAN0011</span><br><span class="line">SW(vlan)<span class="comment">#ex</span></span><br><span class="line">APPLY completed.</span><br><span class="line">Exiting....</span><br><span class="line">SW<span class="comment">#conf t</span></span><br><span class="line">SW(config)<span class="comment">#int f1/1</span></span><br><span class="line">SW(config-if)<span class="comment">#swi    </span></span><br><span class="line">SW(config-if)<span class="comment">#switchport mode access </span></span><br><span class="line">SW(config-if)<span class="comment">#switchport access vlan 10</span></span><br><span class="line">SW(config-if)<span class="comment">#ex</span></span><br><span class="line">SW(config)<span class="comment">#int f1/2</span></span><br><span class="line">SW(config-if)<span class="comment">#switchport mode access </span></span><br><span class="line">SW(config-if)<span class="comment">#switchport access vlan 11</span></span><br><span class="line">SW(config-if)<span class="comment">#ex</span></span><br><span class="line">SW(config)<span class="comment">#int f1/0</span></span><br><span class="line">SW(config-if)<span class="comment">#switchport mode trunk</span></span><br></pre></td></tr></table></figure>
+<p>然后 配置三层交换机 R1</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">R1<span class="comment">#vlan database </span></span><br><span class="line">R1(vlan)<span class="comment">#vlan 10</span></span><br><span class="line">VLAN 10 added:</span><br><span class="line">    Name: VLAN0010</span><br><span class="line">R1(vlan)<span class="comment">#vlan 11</span></span><br><span class="line">VLAN 11 added:</span><br><span class="line">    Name: VLAN0011</span><br><span class="line">R1(vlan)<span class="comment">#ex</span></span><br><span class="line">APPLY completed.</span><br><span class="line">Exiting....</span><br><span class="line">R1<span class="comment">#conf t </span></span><br><span class="line">R1(config)<span class="comment">#int f1/0</span></span><br><span class="line">R1(config-if)<span class="comment">#switchport trunk encapsulation dot1q </span></span><br><span class="line">R1(config-if)<span class="comment">#switchport mode trunk </span></span><br><span class="line">R1(config-if)<span class="comment">#ex</span></span><br><span class="line">R1(config)<span class="comment">#int vlan 10</span></span><br><span class="line">R1(config-if)<span class="comment">#ip add 192.168.160.2 255.255.255.0</span></span><br><span class="line">R1(config-if)<span class="comment">#no sh</span></span><br><span class="line">R1(config-if)<span class="comment">#ex</span></span><br><span class="line">R1(config)<span class="comment">#int vlan 11</span></span><br><span class="line">R1(config-if)<span class="comment">#ip add 192.168.150.2 255.255.255.0</span></span><br><span class="line">R1(config-if)<span class="comment">#no sh</span></span><br><span class="line">R1(config-if)<span class="comment">#ip helper-address 192.168.160.7 </span></span><br><span class="line">R1(config-if)<span class="comment">#ex</span></span><br><span class="line">R1(config)<span class="comment">#ip routing               //开启路由功能</span></span><br><span class="line">R1(config)<span class="comment">#service dhcp             //开启DHCP功能</span></span><br></pre></td></tr></table></figure>
+<p>配置 DHCP服务器配置文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">[root@www ~]<span class="comment"># rpm -qc dhcp</span></span><br><span class="line">/etc/dhcp/dhcpd.conf</span><br><span class="line">/etc/dhcp/dhcpd6.conf</span><br><span class="line">/etc/openldap/schema/dhcp.schema</span><br><span class="line">/etc/sysconfig/dhcpd</span><br><span class="line">/var/lib/dhcpd/dhcpd.leases</span><br><span class="line">/var/lib/dhcpd/dhcpd6.leases</span><br><span class="line">[root@www ~]<span class="comment"># vim /etc/dhcp/dhcpd.conf </span></span><br><span class="line"></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># DHCP Server Configuration file.</span></span><br><span class="line"><span class="comment">#   see /usr/share/doc/dhcp*/dhcpd.conf.example</span></span><br><span class="line"><span class="comment">#   see dhcpd.conf(5) man page</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">option domain-name <span class="string">"kgc.com"</span>;                   //</span><br><span class="line">option domain-name-servers www.kgc.com;         //</span><br><span class="line">default-lease-time 86400;                       //祖约时间s</span><br><span class="line">max-lease-time 86400;                           //最大租约时间s</span><br><span class="line">subnet 192.168.160.0 netmask 255.255.255.0 &#123;    //分配地址的网段和掩码</span><br><span class="line">        range 192.168.160.70 192.168.160.99;     //分配地址的范围</span><br><span class="line">        option routers 192.168.160.2;            //分配地址的网关</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">subnet 192.168.150.0 netmask 255.255.255.0 &#123;</span><br><span class="line">        range 192.168.150.110 192.168.150.199;</span><br><span class="line">        option routers 192.168.150.2;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">：wq</span><br><span class="line">[root@www ~]<span class="comment"># systemctl start dhcpd          //启动DHCP服务器 /＋d 表示守护进程</span></span><br></pre></td></tr></table></figure>
+<p>然后切换网卡登录另外一台主机<br><img src="img/6.20.6.png" alt="cmd查看网络"><br><img src="img/6.20.7.png" alt="网络设置状态查看"></p>
+
+    
+
+    
+
+    
+
+  </div>
+  <div class="article-info article-info-index">
+    
+    
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">dhcp</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+    
+
+    
+
+    
+    <div class="clearfix"></div>
+  </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Samba文件共享服务" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -337,7 +431,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">DHCP</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">dhcp</a>
         		</li>
       		
 		</ul>
@@ -589,15 +683,15 @@
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">DHCP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">linux</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">samba</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">dhcp</a>
               </li>
             
             <div class="clearfix"></div>
