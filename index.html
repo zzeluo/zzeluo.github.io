@@ -173,7 +173,51 @@
   
   <div class="article-entry" itemprop="articleBody">
     
-    
+    <h3 id="SSH远程管理"><a href="#SSH远程管理" class="headerlink" title="SSH远程管理"></a>SSH远程管理</h3><p>SSH（Secure Shell）是一种安全通道协议，主要用来实现字符界面的远程登录，远程复制等功能。<br>SSH协议对通信双方的数据传输进行了加密处理，其中包括用户登录时输入的用户口令。<br>与早期的telnet（远程登录），rh（Remote Shell，远程执行命令），rcp（Remote File Copy，远程文件复制）等应用相比，SSH协议提供了更好的安全性。</p>
+<h5 id="SSH服务及配置文件"><a href="#SSH服务及配置文件" class="headerlink" title="SSH服务及配置文件"></a>SSH服务及配置文件</h5><p>在 CentOS7 系统中，OpenSSH服务器由 openssh，openssh-server等软件包提供（默认已安装），并已将sshd添加为标准的系统服务。执行“service sshd start”命令即可按默认配置启动sshd服务，包括root在内的大部分用户（只要拥有合法的登录Shell）都可以远程登录系统。<br>   sshd服务的配置文件默认位于/etc/ssh/sshd_config 目录下，正确调整相关配置项，可以进一步提高sshd远程登录的安全性。</p>
+<h5 id="服务监听选项"><a href="#服务监听选项" class="headerlink" title="服务监听选项"></a>服务监听选项</h5><p>sshd服务使用的默认端口号为22，必要时建议修改此端口号，并指定监听服务的具体IP地址，以提高在网络中的隐蔽性。禁用DNS反向解析可以提高服务器的响应速度。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># vi /etc/ssh/sshd_config </span></span><br><span class="line"></span><br><span class="line">Port 22                        //监听端口为22</span><br><span class="line"></span><br><span class="line">ListenAddress 192.168.160.7    //监听地址为192.168.160.7</span><br><span class="line">Protocol 2                    //使用SSH V2协议</span><br><span class="line">UseDNS no                    //禁用DNS反向解析</span><br><span class="line"></span><br><span class="line">.....</span><br><span class="line">[root@ns1 ssh]<span class="comment"># service sshd reload</span></span><br><span class="line">重新载入sshd：                          [确定]</span><br></pre></td></tr></table></figure>
+<h5 id="用户登录控制"><a href="#用户登录控制" class="headerlink" title="用户登录控制"></a>用户登录控制</h5><p>sshd服务默认允许root用户登录，当在Internet中使用时这是非常不安全的。普遍的做法是：<br>先以普通用户远程登入，进入安全Shell环境后，根据实际需要使用su 命令切换为root用户。<br>另外，可以限制登录验证的时间（默认为2分钟）及最大重试次数，若超过限制后仍未能登录则断开连接。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ssh]<span class="comment"># vim /etc/ssh/sshd_config </span></span><br><span class="line"></span><br><span class="line">LoginGraceTime 2m          //登录验证时间为2分钟</span><br><span class="line">PermitRootLogin yes        //禁止root用户登录</span><br><span class="line"></span><br><span class="line">MaxAuthTries 6            //最大重试次数为6</span><br><span class="line">PermitEmptyPasswords no    //禁止空密码用户登录</span><br><span class="line"></span><br><span class="line">:wq</span><br><span class="line">[root@ns1 ssh]<span class="comment"># service sshd reload</span></span><br></pre></td></tr></table></figure>
+<p>当希望只允许或禁止某些用户登录时，可以使用AllowUsers 或DenyUsers配置，两者用法类似（注意不要同时使用）。<br>例如，若只允许jerry和admin用户登录，且其中admin用户仅能够从IP地址为61.23.24.25 的主机远程登录，</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ssh]<span class="comment"># vim /etc/ssh/sshd_config </span></span><br><span class="line"></span><br><span class="line">AllowUsers jerry admin@61.23.24.25      //多个用户以空格分隔    </span><br><span class="line"></span><br><span class="line">[root@ns1 ssh]<span class="comment"># service sshd reload</span></span><br></pre></td></tr></table></figure>
+<h5 id="登录验证方式"><a href="#登录验证方式" class="headerlink" title="登录验证方式"></a>登录验证方式</h5><p>sshd服务支持两种验证方式————密码验证，密钥对验证，可以设置只使用其中一种方式，也可以两种方式都启用。<br>1）密码验证<br>  以服务器中本地系统用户的登录名称，密码进行验证。（简单且安全性不强）<br>2）密钥对验证<br>  要求提供相匹配的密钥信息才能通过验证。通常先在客户机中创建一对密钥文件（公钥，私钥），然后将公钥文件放在服务器中的指定位置。远程登录时，系统将使用公钥，私钥进行加密/解密关联验证，大大增强了远程管理的安全性。<br>· 公钥和私钥是成对生成的，这两个密钥互不相同，可以互相加密和解密。<br>· 不能根据一个密钥来推算出另一个密钥。<br>· 公钥对外公开，私钥只有私钥的持有人才知道。<br>  公钥与私钥要配对使用，如果用公钥对数据进行加密，只有用相对应的私钥才能解密；如果用私钥对数据进行加密，那么只有用对应的公钥才能解密。<br>  当密码验证，密钥对验证都启用时，服务器将优先使用密钥对验证。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ssh]<span class="comment"># vim /etc/ssh/sshd_config </span></span><br><span class="line"></span><br><span class="line">PasswordAuthentication yes                //启动密码验证</span><br><span class="line">PubkeyAuthentication yes                  //启动密钥对验证</span><br><span class="line">AuthorizedKeysFile	.ssh/authorized_keys      //指定公钥库数据文件</span><br><span class="line"></span><br><span class="line">:wq</span><br><span class="line">[root@ns1 ssh]<span class="comment"># service sshd reload</span></span><br></pre></td></tr></table></figure>
+<h2 id="使用SSH客户端程序"><a href="#使用SSH客户端程序" class="headerlink" title="使用SSH客户端程序"></a>使用SSH客户端程序</h2><p>#####1）ssh远程登录<br>  通过ssh命令可以远程登录sshd服务，为用户提供一个安全的Shell环境，以便对服务器进行管理和维护。<br>  使用时应指定登录用户，目标主机地址作为参数。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh user@host</span><br></pre></td></tr></table></figure>
+<p>当用户第一次登录SSH服务器时，必须接受服务器发来的RSA密钥（根据提示输入“yes”）后才能继续验证。接收的密钥信息将保存在 ~ /.ssh/known_hosts 文件中。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">whoami            //确认当前用户</span><br><span class="line">/sbin/ifconfig eth0 | grep <span class="string">"inet addr"</span>      //确认当前主机地址</span><br></pre></td></tr></table></figure>
+
+<p>######2）scp 远程复制<br>通过scp命令可以利用SSH安全连接与远程主机相互复制文件。<br>使用时，必须指定复制源，目标之外，还应指定目标主机地址，登录用户，执行后提示验证口令即可。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">格式1：scp  user@host:file1  file2</span><br><span class="line">格式2：scp  file1  user@host:file2</span><br></pre></td></tr></table></figure>
+<p>#####3）sftp安全FTP上下载<br>通过sftp命令可以利用SSH安全连接与远程主机上传，下载文件，采用了与FTP类似的登录过程和交互式环境，便于目录资源管理。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sftp  user@host</span><br></pre></td></tr></table></figure>
+
+<h2 id="构建密钥对验证的SSH体系"><a href="#构建密钥对验证的SSH体系" class="headerlink" title="构建密钥对验证的SSH体系"></a>构建密钥对验证的SSH体系</h2><p>整体实现过程<br><img src="img/6.24.1.png" alt="密钥对验证的SSH体系"><br>#####1）在客户端创建密钥对<br>在linux系统中，通过ssh-keygen工具为当前用户创建密钥对文件。可用的加密算法为RSA    或DSA（“ssh-keygen”命令的“-t”选项用于指定RSA算法类型）。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[zhangsan@localhost ~]$ ssh-keygen -t ecdsa</span><br><span class="line">Generating public/private ecdsa key pair.</span><br><span class="line">Enter file <span class="keyword">in</span> <span class="built_in">which</span> to save the key (/home/zhangsan/.ssh/id_ecdsa):  //指定私钥位置</span><br><span class="line">Created directory <span class="string">'/home/zhangsan/.ssh'</span>.        </span><br><span class="line">Enter passphrase (empty <span class="keyword">for</span> no passphrase):       //设置密钥短语</span><br><span class="line">Enter same passphrase again:                     //确认密钥短语</span><br><span class="line">Your identification has been saved <span class="keyword">in</span> /home/zhangsan/.ssh/id_ecdsa.    //私钥文件位置</span><br><span class="line">Your public key has been saved <span class="keyword">in</span> /home/zhangsan/.ssh/id_ecdsa.pub.    //公钥文件位置</span><br></pre></td></tr></table></figure>
+<p>提示指定私钥文件的存放位置时，一般直接按Enter键即可，最后生成的私钥，公钥文件默认存放在宿主目录中的隐藏文件夹.ssh/下。<br>私钥短语用来对私钥文件进行保护，当使用该私钥验证登录时必须正确提供此处所设置的短语。<br>#####2）将公钥文件上传至服务器<br>将上一步生成的公钥文件上传至服务器，并部署到服务器端用户的公钥数据库中。<br>     任何方式均可（共享、FTP、Email、SCP、……）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[zhangsan@localhost ~]$ scp ~/.ssh/id_ecdsa.pub root@172.16.16.22:/tmp</span><br></pre></td></tr></table></figure>
+<p>#####3）在服务器中导入公钥文本<br>在服务器中，公钥数据库位于<del>/.ss 目录，默认的文件名authorized_keys。当获得客户机发送过来的公钥文件以后，可以通过重定向将公钥文本内容追加到目标用户的公钥数据库中。<br>将公钥文本添加至目标用户的公钥库<br>默认公钥库位置：</del>/.ssh/authorized_keys</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># mkdir /home/lisi/.ssh/</span></span><br><span class="line">[root@localhost ~]<span class="comment"># cat /tmp/id_ecdsa.pub &gt;&gt; /home/lisi/.ssh/authorized_keys</span></span><br><span class="line">[root@localhost ~]<span class="comment"># tail -1 /home/lisi/.ssh/authorized_keys</span></span><br><span class="line">ecdsa-sha2-nistp256</span><br><span class="line">AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBLJSnBhscYBfnnHxSYAJEBD4sNkTLMF7itcFGM33RdeXU89QNQkMnCrCJHzAlZURrzpXG6Mp62mz9gRXUnARk8s=zhangsan@localhost</span><br></pre></td></tr></table></figure>
+<p>用于sshd服务器默认采用严格的权限检测模式（StrictModes yes），因此还需要注意公钥库文件 authorized_keys的权限————要求是登录的目标用户或root用户，同组或其他用户对该文件不能用写入权限，否则可能无法成功使用密钥对验证。<br>#####4）客户端使用密钥对验证登录<br>验证用户：服务端的用户lisi<br>验证密码：客户端的用户zhangsan的私钥短语</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[zhangsan@localhost ~]$ ssh lisi@172.16.16.22</span><br><span class="line">[lisi@localhost ~]$ whoami </span><br><span class="line">lisi</span><br></pre></td></tr></table></figure>
+<p>** 第二步和第三步可以采用另一种方法，即使用“ssh-copy-id -i 公钥文件 user@host”格式，<br>-i 选项指定公钥文件，user 是指定主机用户。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-copy-id  -i  公钥文件 user@host</span><br></pre></td></tr></table></figure>
+<p>验证密码后，会将公钥自动添加到目标主机user 宿主目录下的.ssh/authorized_keys 文件结尾。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[zhangsan@localhost ~]$ ssh-copy-id -i ~/.ssh/id_rsa.pub lisi@172.16.16.22</span><br></pre></td></tr></table></figure>
+<p>使用密钥对验证的方式登录时，不需要知道目标用户的密码，而是改为验证客户端用户的私钥短语并检测双方的私钥，公钥文件是否配对，这样安全性更高。</p>
+<h2 id="TCP-Wrappers-访问控制"><a href="#TCP-Wrappers-访问控制" class="headerlink" title="TCP Wrappers 访问控制"></a>TCP Wrappers 访问控制</h2><p>  TCP Wrappers 将其他的TCP服务程序“包裹”起来，增加一个安全检测过程，外来连接请求必须先通过这层安全检测，获得许可后才能访问真正的服务程序。<br>TCP Wrappers 的访问控制时基于TCP协议的应用服务。<br><img src="img/6.24.2.png" alt="TCP Wrappers的工作原理"></p>
+<ul>
+<li>缺点：第一，TCP Wrappers 只能控制TCP协议的应用服务；<br>第二，并不是所有基于TCP协议的应用服务都能接受TCP Wrappers 的控制。</li>
+</ul>
+<p>######tcp wrappers软件包提供了执行程序tcpd和共享链接库文件libwrap.so.* ，对应TCP Wrappers保护机制的两种实现方式—————直接使用tcpd程序对其他服务程序进行保护，需要运行tcpd；由其他网络服务程序调用libwrap.so.* 链接库，不需要运行tcpd程序。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ldd /use/sbin/sshd | grep "libwrap"</span></span><br></pre></td></tr></table></figure>
+<p>####访问控制策略的配置文件<br>/etc/hosts.allow<br>/etc/hosts.deny</p>
+<h4 id="设置访问控制策略"><a href="#设置访问控制策略" class="headerlink" title="设置访问控制策略"></a>设置访问控制策略</h4><p>策略格式：服务列表:客户机地址列表    &lt;服务程序列表&gt;:&lt;客户机地址列表&gt;<br>服务列表<br>多个服务以逗号分隔，ALL 表示所有服务<br>客户机地址列表<br>多个地址以逗号分隔，ALL表示所有地址<br>允许使用通配符 ? 和 *<br>网段地址，如 192.168.4.  或者 192.168.4.0/255.255.255.0<br>区域地址，如 .benet.com<br>######策略的应用顺序<br>先检查hosts.allow，找到匹配则允许访问<br>否则再检查hosts.deny，找到则拒绝访问<br>若两个文件中均无匹配策略，则默认允许访问<br>#####策略应用示例<br>仅允许从以下地址访问sshd服务<br>主机61.63.65.67<br>网段192.168.2.0/24<br>禁止其他所有地址访问受保护的服务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># vi /etc/hosts.allow</span></span><br><span class="line">sshd:61.63.65.67,192.168.2.*</span><br><span class="line">[root@localhost ~]<span class="comment"># vi /etc/hosts.deny</span></span><br><span class="line">sshd:ALL</span><br></pre></td></tr></table></figure>
+
+<p>###本章总结<br>SSH 服务器支持两种登录验证方式：密码验证，密钥对验证。<br>SSH 服务的安全控制包括修改监听端口，禁止root用户或空密码用户登录，仅允许个别用户，采用密钥对验证等。<br>构建SSH 密钥对验证体系时，需要将客户端的公钥发送给服务器，并将其导入目标用户的 authorized_keys 文件中。<br>TCP Wrappers 机制可以为网络服务提供额外安全保护，访问策略配置文件为 /etc/hosts.allow ,/etc/hosts.deny。</p>
+
     
 
     
@@ -184,6 +228,17 @@
   <div class="article-info article-info-index">
     
     
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">ssh</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
     
 
     
@@ -268,7 +323,7 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"> @        	IN   	NS         	ns1.bdqn.com.</span><br><span class="line"> 		IN     	MX 10	mail.bdqn.com.</span><br><span class="line">ns1       	IN     	A          	58.119.74.203</span><br><span class="line">www      	IN     	A          	173.16.16.1</span><br><span class="line">mail     	IN     	A          	173.16.16.4</span><br><span class="line">ftp      	IN     	CNAME	www</span><br></pre></td></tr></table></figure>
 <p>当多台服务器同时为一个网站提供服务时，可以在区域数据文件添加同一域名对应多个IP地址的域名解析记录，这是基于域名解析的负载均衡：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">www			IN  	A 			173.16.16.173</span><br><span class="line">www			IN 		A  			173.16.16.174</span><br><span class="line">www         IN      A           173.16.16.175</span><br></pre></td></tr></table></figure>
-<p>当然也有一台服务器需要同时承载某个DNS区域内的许多个不同域名的时候（如IDC 的虚拟主机服务器，提供个人主页空间的网站服务器等），可以在区域数据文件的最后一行添加 泛域名解析记录，<br>即使用“*” 以匹配任意主机名。</p>
+<p>当然也有一台服务器需要同时承载某个DNS区域内的许多个不同域名的时候（如IDC 的虚拟主机服务器，提供个人主页空间的网站服务器等），可以在区域数据文件的最后一行添加 泛域名解析记录，<br>即使用 “ * ” 以匹配任意主机名。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">*         IN      A            173.16.16.173</span><br></pre></td></tr></table></figure>
 
 <h6 id="在反向区域数据文件中，不会用到A地址记录，而是使用PTR指针（Point）记录。"><a href="#在反向区域数据文件中，不会用到A地址记录，而是使用PTR指针（Point）记录。" class="headerlink" title="在反向区域数据文件中，不会用到A地址记录，而是使用PTR指针（Point）记录。"></a>在反向区域数据文件中，不会用到A地址记录，而是使用PTR指针（Point）记录。</h6><p>例如：对于反向区域 16.16.173.in-addr.arpa ,添加的反向解析记录可以是以下形式。</p>
@@ -1075,6 +1130,10 @@
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">dns</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">ssh</a>
               </li>
             
             <div class="clearfix"></div>
