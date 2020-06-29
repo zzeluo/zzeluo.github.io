@@ -6,17 +6,29 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Tag: samba | 择萝</title>
+  <title>CentOS7通过http方式搭建本地yum源 | 择萝</title>
   <meta name="generator" content="hexo-theme-yilia-plus">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   
-  <meta property="og:type" content="website">
-<meta property="og:title" content="择萝">
-<meta property="og:url" content="http://yoursite.com/tags/samba/index.html">
+  <meta name="description" content="部署PXE远程安装服务PXE 是由Intel公司开发的网络引导技术，工作在Client&#x2F;Server 模式，允许客户机通过网络从远程服务器下载引导镜像，并加载安装文件或者整个操作系统。若要搭建PXE 网络系统，必须满足以下几个前提条件。1）客户机的网卡支持PXE 协议（集成BOOTROM 芯片），且主板支持网络引导。2）网络中有一台DHCP服务器以便为客户机自动分配地址，指定引导文件位置。3）服务">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CentOS7通过http方式搭建本地yum源">
+<meta property="og:url" content="http://yoursite.com/2020/06/29/PXE%E9%AB%98%E6%95%88%E6%89%B9%E9%87%8F%E7%BD%91%E7%BB%9C%E8%A3%85%E6%9C%BA/index.html">
 <meta property="og:site_name" content="择萝">
+<meta property="og:description" content="部署PXE远程安装服务PXE 是由Intel公司开发的网络引导技术，工作在Client&#x2F;Server 模式，允许客户机通过网络从远程服务器下载引导镜像，并加载安装文件或者整个操作系统。若要搭建PXE 网络系统，必须满足以下几个前提条件。1）客户机的网卡支持PXE 协议（集成BOOTROM 芯片），且主板支持网络引导。2）网络中有一台DHCP服务器以便为客户机自动分配地址，指定引导文件位置。3）服务">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://yoursite.com/2020/06/29/PXE%E9%AB%98%E6%95%88%E6%89%B9%E9%87%8F%E7%BD%91%E7%BB%9C%E8%A3%85%E6%9C%BA/img/6.29.png">
+<meta property="og:image" content="http://yoursite.com/2020/06/29/PXE%E9%AB%98%E6%95%88%E6%89%B9%E9%87%8F%E7%BD%91%E7%BB%9C%E8%A3%85%E6%9C%BA/img/6.29.1.png">
+<meta property="og:image" content="http://yoursite.com/2020/06/29/PXE%E9%AB%98%E6%95%88%E6%89%B9%E9%87%8F%E7%BD%91%E7%BB%9C%E8%A3%85%E6%9C%BA/img/6.29.2.png">
+<meta property="og:image" content="http://yoursite.com/2020/06/29/PXE%E9%AB%98%E6%95%88%E6%89%B9%E9%87%8F%E7%BD%91%E7%BB%9C%E8%A3%85%E6%9C%BA/img/6.29.3.png">
+<meta property="og:image" content="http://yoursite.com/2020/06/29/PXE%E9%AB%98%E6%95%88%E6%89%B9%E9%87%8F%E7%BD%91%E7%BB%9C%E8%A3%85%E6%9C%BA/img/6.29.5.png">
+<meta property="og:image" content="http://yoursite.com/2020/06/29/PXE%E9%AB%98%E6%95%88%E6%89%B9%E9%87%8F%E7%BD%91%E7%BB%9C%E8%A3%85%E6%9C%BA/img/6.29.4.png">
+<meta property="article:published_time" content="2020-06-29T06:02:13.000Z">
+<meta property="article:modified_time" content="2020-06-29T14:34:49.121Z">
 <meta property="article:author" content="择萝">
+<meta property="article:tag" content="pxe">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/2020/06/29/PXE%E9%AB%98%E6%95%88%E6%89%B9%E9%87%8F%E7%BD%91%E7%BB%9C%E8%A3%85%E6%9C%BA/img/6.29.png">
   
   
     <link rel="icon" href="/favicon.ico">
@@ -137,65 +149,168 @@
               class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-PXE高效批量网络装机" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2020" class="archive-year">2020</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	
-<a href="/2020/06/19/Samba%E6%96%87%E4%BB%B6%E5%85%B1%E4%BA%AB%E6%9C%8D%E5%8A%A1/" class="archive-article-date">
-        <time datetime="2020-06-19T03:20:26.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-19</time>
-</a>
-
-        </div>
-    	 
+      <header class="article-header">
   
-    <h1 itemprop="name">
-	
-	  <a class="archive-article-title" href="/2020/06/19/Samba%E6%96%87%E4%BB%B6%E5%85%B1%E4%BA%AB%E6%9C%8D%E5%8A%A1/" target="_blank">Samba文件共享服务</a>
   
+    <h1 class="article-title" itemprop="name">
+      CentOS7通过http方式搭建本地yum源
     </h1>
   
 
 
-        <div class="article-info info-on-right">
-          
+  
+  
+<a href="/2020/06/29/PXE%E9%AB%98%E6%95%88%E6%89%B9%E9%87%8F%E7%BD%91%E7%BB%9C%E8%A3%85%E6%9C%BA/" class="archive-article-date">
+        <time datetime="2020-06-29T06:02:13.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-29</time>
+</a>
+
+  
+  
+    
+<div style="margin-top:10px;">
+  <span class="post-time">
+    <span class="post-meta-item-icon">
+      <!-- fonts.scss -->
+      <!-- 百度字体平台:http://fontstore.baidu.com/static/editor/index.html -->
+      <i class="icon-statistics"></i>
+      <span class="post-meta-item-text"> 字数统计:</span>
+      <span class="post-count">2.9k字</span>
+    </span>
+  </span>
+
+  <span class="post-time">
+    &nbsp; | &nbsp;
+    <span class="post-meta-item-icon">
+      <i class="icon-book icon"></i>
+      <span class="post-meta-item-text"> 阅读时长≈</span>
+      <span class="post-count">12分</span>
+    </span>
+  </span>
+</div>
+
+
+  
+  </header>
+  
+  <div class="article-entry" itemprop="articleBody">
+    
+    <h2 id="部署PXE远程安装服务"><a href="#部署PXE远程安装服务" class="headerlink" title="部署PXE远程安装服务"></a>部署PXE远程安装服务</h2><p>PXE 是由Intel公司开发的网络引导技术，工作在Client/Server 模式，允许客户机通过网络从远程服务器下载引导镜像，并加载安装文件或者整个操作系统。<br>若要搭建PXE 网络系统，必须满足以下几个前提条件。<br>1）客户机的网卡支持PXE 协议（集成BOOTROM 芯片），且主板支持网络引导。<br>2）网络中有一台DHCP服务器以便为客户机自动分配地址，指定引导文件位置。<br>3）服务器通过TETP(Trivial File Transfer Protocol，简单文件传输协议)提供引导镜像文件的下载。<br>其中，第一个条件实际上是硬件要求，目前绝大多数服务器和大多数PC都能够提供此支持，只需在BIOS 设置中允许从Network 或LAN 启动即可。</p>
+<p>####PXE，Pre-boot eXcution Environment<br>预启动执行环境，在操作系统之前运行<br>可用于远程安装、构建无盘工作站<br>####服务端<br>运行DHCP服务，用来分配地址、定位引导程序<br>运行TFTP服务器，提供引导程序下载<br>####客户端<br>网卡支持PXE协议<br>主板支持网络启动</p>
+<h3 id="搭建PXE-远程安装服务器"><a href="#搭建PXE-远程安装服务器" class="headerlink" title="搭建PXE 远程安装服务器"></a>搭建PXE 远程安装服务器</h3><p>本例的 PXE 远程安装服务器集成了 CentOS 7安装源，TFTP服务，DHCP服务，能够向客户机裸机发送PXE 引导程序，Linux内核，启动菜单等数据，以及提供安装文件。<br>###基本部署过程<br>准备CentOS 7 安装源（YUM仓库）<br>启用TFTP服务，并提供内核、引导程序<br>启用DHCP服务，用来分配地址、指出引导程序位置<br>配置启动菜单</p>
+<h4 id="1-准备CentOS-安装源"><a href="#1-准备CentOS-安装源" class="headerlink" title="1. 准备CentOS 安装源"></a>1. 准备CentOS 安装源</h4><p>CentOS 7 的网络安装源一般通过 HTTP,FTP 协议发布，另外也支持NFS（Network File System，网络文件系统）协议。<br>  采用FTP 协议发布安装源，可以在服务器上部署一个YUM 软件仓库。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># mkdir /var/ftp/centos7</span></span><br><span class="line">[root@ns1 ~]<span class="comment"># cp -rf /media/cdrom/* /var/ftp/centos7/</span></span><br><span class="line">[root@ns1 ~]<span class="comment"># vim /etc/yum.repos.d/centos-my.repo </span></span><br><span class="line">[my]</span><br><span class="line">name=my repodata</span><br><span class="line">baseurl=ftp://192.168.160.7/centos7</span><br><span class="line">enabled=1</span><br><span class="line">gpgcheck=0</span><br><span class="line"></span><br><span class="line">:wq</span><br><span class="line">[root@ns1 ~]<span class="comment"># systemctl start vsftpd</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="2-安装并启动TFIP-服务"><a href="#2-安装并启动TFIP-服务" class="headerlink" title="2. 安装并启动TFIP 服务"></a>2. 安装并启动TFIP 服务</h4><p>TFTP 服务由 tftp-server 软件包提供，默认由 xinetd 超级服务进行管理，依次配置文件位于/etc/xinetd.d/tftp 。<br>配置时只要将 “disable = yes”改为“disable = no”，然后启动 xinetd 服务即可。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># yum -y install tftp-server</span></span><br><span class="line">[root@ns1 ~]<span class="comment"># vim /etc/xinetd.d/tftp </span></span><br><span class="line"></span><br><span class="line">service tftp</span><br><span class="line">&#123;</span><br><span class="line">        socket_type             = dgram</span><br><span class="line">        protocol                = udp</span><br><span class="line">        <span class="built_in">wait</span>                    = yes</span><br><span class="line">        user                    = root</span><br><span class="line">        server                  = /usr/sbin/in.tftpd</span><br><span class="line">        server_args             = -s /var/lib/tftpboot       //默认的TFTP根目录</span><br><span class="line">        <span class="built_in">disable</span>                 = no</span><br><span class="line">        per_source              = 11</span><br><span class="line">        cps                     = 100 2</span><br><span class="line">        flags                   = IPv4</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">:wq</span><br><span class="line">[root@ns1 ~]<span class="comment"># systemctl enable tftp</span></span><br><span class="line">Created symlink from /etc/systemd/system/sockets.target.wants/tftp.socket to /usr/lib/systemd/system/tftp.socket.</span><br><span class="line">[root@ns1 ~]<span class="comment"># systemctl start tftp</span></span><br></pre></td></tr></table></figure>
+<h4 id="3-准备linux内核-，初始化镜像文件"><a href="#3-准备linux内核-，初始化镜像文件" class="headerlink" title="3. 准备linux内核 ，初始化镜像文件"></a>3. 准备linux内核 ，初始化镜像文件</h4><p>用于 PXE 网络安装的Linux内核，初始化镜像文件可以从 CentOS 7 系统光盘获得，分别为 vmlinuz 和 initrd.img，位于文件夹 images/pxeboot 下。找到这两个文件并将其复制到tftp 服务的根目录下。<br>  准备内核文件 vmlinuz ，初始化镜像文件 initrd.img 。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># cd /var/ftp/centos7/images/pxeboot/</span></span><br><span class="line">[root@ns1 pxeboot]<span class="comment"># ls</span></span><br><span class="line">initrd.img  TRANS.TBL  vmlinuz</span><br><span class="line">[root@ns1 pxeboot]<span class="comment"># cp vmlinuz initrd.img /var/lib/tftpboot/</span></span><br></pre></td></tr></table></figure>
+<h4 id="4-准备-PXE-引导程序，启动菜单文件"><a href="#4-准备-PXE-引导程序，启动菜单文件" class="headerlink" title="4. 准备 PXE 引导程序，启动菜单文件"></a>4. 准备 PXE 引导程序，启动菜单文件</h4><p>用于 PXE 网络安装的引导程序为 pxelinux.0 ，由软件包 syslinux 提供。安装好软件包 syslinux，然后将文件 pxelinux.0 也复制到 tftp服务的根目录下。<br>  准备引导程序文件 pxelinux.0 。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># yum -y install syslinux</span></span><br><span class="line">[root@ns1 ~]<span class="comment"># rpm -ql syslinux |grep pxelinux.0</span></span><br><span class="line">/usr/share/syslinux/gpxelinux.0</span><br><span class="line">/usr/share/syslinux/pxelinux.0</span><br><span class="line">[root@ns1 ~]<span class="comment"># cp /usr/share/syslinux/pxelinux.0 /var/lib/tftpboot/</span></span><br></pre></td></tr></table></figure>
+<p>启动菜单用来指定客户机的引导过程，包括如何调用内核，如何加载初始化镜像。<br>默认的启动菜单文件为 default，应放置在 tftp 根目录的 pxelinux.cfg 子目录下。<br>  典型的启动菜单配置可参考以下操作手动建立。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># mkdir /var/lib/tftpboot/pxelinux.cfg</span></span><br><span class="line">[root@ns1 ~]<span class="comment"># vim /var/lib/tftpboot/pxelinux.cfg/default</span></span><br><span class="line"></span><br><span class="line">default auto              //指定默认入口名称</span><br><span class="line">prompt  0				  //0 表示不等待用户控制</span><br><span class="line">label   auto</span><br><span class="line">        kernel  vmlinuz</span><br><span class="line">        append initrd=initrd.img repo=ftp://192.168.160.7/centos7</span><br><span class="line">:wq</span><br></pre></td></tr></table></figure>
+<p>其中，prompt 用来设置是否等待用户选择；label 用来定义并分隔启动项；kernel 和 append 用来定义引导参数。<br>实现无人值守安装时只需要一个如果就够了。</p>
+<h4 id="5-安装并启用DHCP-服务。"><a href="#5-安装并启用DHCP-服务。" class="headerlink" title="5. 安装并启用DHCP 服务。"></a>5. 安装并启用DHCP 服务。</h4><p>  由于 PXE 客户机通常是尚未装系统的裸机，因此为了与服务器取得联系并正确下载相关引导文件，需要预先配置好 DHCP 服务来自动分配地址并告知引导文件位置。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># yum -y install dhcp</span></span><br><span class="line">[root@ns1 ~]<span class="comment"># vim /etc/dhcp/dhcpd.conf </span></span><br><span class="line"></span><br><span class="line">option domain-name <span class="string">"kgc.com"</span>;</span><br><span class="line">option domain-name-servers www.kgc.com;</span><br><span class="line">default-lease-time 86400;</span><br><span class="line">max-lease-time 86400;</span><br><span class="line">subnet 192.168.160.0 netmask 255.255.255.0 &#123;</span><br><span class="line">        range 192.168.160.70 192.168.160.99;</span><br><span class="line">        option routers 192.168.160.2;</span><br><span class="line"></span><br><span class="line">        next-server 192.168.160.7;       //指定TFTP 服务器的地址</span><br><span class="line">        filename <span class="string">"pxelinux.0"</span>;          //指定 PXE 引导程序的文件名</span><br><span class="line">&#125;</span><br><span class="line">:wq</span><br><span class="line">[root@ns1 ~]<span class="comment"># systemctl restart dhcpd</span></span><br></pre></td></tr></table></figure>
+<h3 id="验证-PXE-网络安装"><a href="#验证-PXE-网络安装" class="headerlink" title="验证 PXE 网络安装"></a>验证 PXE 网络安装</h3><p>  搭建好的 PXE 远程安装服务器以后，就可以使用客户机进行安装测试了。对于新购买的服务器或PC裸机，一般不需要额外设置；若要为已有系统的主机重装系统，则可能需要修改 BIOS 设置，将 “Boot First” 设为 “NETWORK” 或 “LAN”, 然后重启主机。</p>
+<h2 id="实现-Kickstart-无人值守安装"><a href="#实现-Kickstart-无人值守安装" class="headerlink" title="实现 Kickstart 无人值守安装"></a>实现 Kickstart 无人值守安装</h2><p>要实现无人值守自动安装，通过使用 Kickstart 工具配置安装应答文件，自动完成安装过程中的各种设置，从而无需手动干预，提高网络装机效率，同时也可以在应答文件中通过添加 %post 脚本，完成安装后的各种配置操作。</p>
+<h4 id="kickstart无人值守技术"><a href="#kickstart无人值守技术" class="headerlink" title="kickstart无人值守技术"></a>kickstart无人值守技术</h4><p>1）创建应答文件，预先定义好各种安装设置。<br>2）免去交互设置过程，从而实现全自动化安装。<br>3）通过添加%post脚本，完成安装后的各种配置操作。</p>
+<h2 id="准备安装应答文件"><a href="#准备安装应答文件" class="headerlink" title="准备安装应答文件"></a>准备安装应答文件</h2><p> 在CentOS 7 系统中安装 system-config-kickstart 工具之后，即可通过图形化向导工具来配置安装应答文件。<br>如果用户对自动应答文件的配置比较熟悉，也可以直接编辑 自动创建的应答文件 （/root/anaconda-ks.cfg）。</p>
+<h3 id="1-配置安装应答参数"><a href="#1-配置安装应答参数" class="headerlink" title="1.配置安装应答参数"></a>1.配置安装应答参数</h3><p>  通过桌面菜单 “应用程序” → “系统工具” → “Kickstart” 即可打开 “Kickstart 配置程序”窗口。在“Kickstart<br>配置程序”窗口中，可以针对 基本配置，安装方法，引导装载程序选项，分区信息，网络配置等各种安装设置进行指定。<br>#####(1)基本配置及安装方法<br>“基础配置” 例如，将默认语言设置为“Eenglish” 时区设置为 “Asia/Shanghai” 根口令设为“1”。<br><img src="img/6.29.png" alt="基础配置"><br>在 “安装方法” 界面中，应正确指定 CentOS 7的安装方法，<br><img src="img/6.29.1.png" alt="安装方法"><br>#####(2)分区信息<br>需正确规划硬盘划分方案。<br>例如，可划分一个500MB的boot分区，4GB的home分区，2GB的 swap分区，将剩余空间划分给根分区，<br><img src="img/6.29.2.png" alt="分区信息"><br>#####(3)网络配置及防火墙配置<br>在 “网络设置” 界面中，添加一个网络设备 “eth0”，将网络类型设为“DHCP”。<br>在 “防火墙配置” 界面中，可以选择禁用 SELinux ，禁用防火墙。<br>#####(4)软件包选择<br>在 “软件包选择” 界面中，根据实际需要选择要安装的软件包分组。<br>#####(5)安装脚本<br>在 “预安装脚本” “安装后脚本” 界面中，可以分别添加在安装前，安装后自动运行的可执行语句。<br><img src="img/6.29.3.png" alt="脚本设置"></p>
+<p>###**  “引导装载程序选项” 界面要选择 安装新引导装载程序<br><img src="img/6.29.5.png" alt="引导程序"></p>
+<h3 id="2-保存自动应答文件"><a href="#2-保存自动应答文件" class="headerlink" title="2. 保存自动应答文件"></a>2. 保存自动应答文件</h3><p> 选择 “Kickstart 配置程序”窗口的 “文件” → “保存” 命令，指定目标文件夹，文件名，将配置好的应答参数保存为文本文件。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># grep -v ^# /root/ftp.cfg </span></span><br><span class="line"></span><br><span class="line">install</span><br><span class="line">keyboard <span class="string">'us'</span></span><br><span class="line">rootpw --iscrypted <span class="variable">$1</span><span class="variable">$VYVocSy5</span><span class="variable">$9oXBJ</span>/p/ftTDPs8Z31cbL/</span><br><span class="line">url --url=<span class="string">"ftp://192.168.160.7/centos7"</span></span><br><span class="line">lang zh_CN</span><br><span class="line">auth  --useshadow  --passalgo=sha512</span><br><span class="line">graphical</span><br><span class="line">firstboot --<span class="built_in">disable</span></span><br><span class="line">selinux --disabled</span><br><span class="line"></span><br><span class="line">firewall --disabled</span><br><span class="line">network  --bootproto=dhcp --device=ens33</span><br><span class="line">reboot</span><br><span class="line">timezone Asia/Shanghai</span><br><span class="line">bootloader --location=mbr</span><br><span class="line">clearpart --all</span><br><span class="line">part /boot --fstype=<span class="string">"xfs"</span> --size=1024</span><br><span class="line">part /home --fstype=<span class="string">"xfs"</span> --size=1024</span><br><span class="line">part swap --fstype=<span class="string">"swap"</span> --size=2048</span><br><span class="line">part / --fstype=<span class="string">"xfs"</span> --grow --size=1</span><br><span class="line"></span><br><span class="line">%packages</span><br><span class="line"></span><br><span class="line">%end</span><br></pre></td></tr></table></figure>
+
+<h2 id="实现批量自动装机"><a href="#实现批量自动装机" class="headerlink" title="实现批量自动装机"></a>实现批量自动装机</h2><p>有了自动安装的应答文件之后，只要将其放置在 PXE 安装服务器的 FTP 目录下，并适当修改引导菜单，就可以实现基于网络的批量自动装机了。</p>
+<h3 id="1-启用启动应答文件"><a href="#1-启用启动应答文件" class="headerlink" title="1. 启用启动应答文件"></a>1. 启用启动应答文件</h3><p>在 PXE 远程安装服务器中，将上一节建立的应答文件复制到 /var/ftp/centos7 目录下，使客户端能够通过 <a href="ftp://192.168.160.7/centos7/ftp.cfg">ftp://192.168.160.7/centos7/ftp.cfg</a> 访问。然后编辑引导菜单文件 default，添加 ks 引导参数以指定 ftp.cfg 应答文件的URL路径。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># cp /root/ftp.cfg /var/ftp/centos7/ftp.cfg</span></span><br><span class="line">[root@ns1 ~]<span class="comment"># vim /var/lib/tftpboot/pxelinux.cfg/default </span></span><br><span class="line"></span><br><span class="line">default auto</span><br><span class="line">prompt  0</span><br><span class="line">label   auto</span><br><span class="line">        kernel  vmlinuz</span><br><span class="line">        append ks=ftp://192.168.160.7/centos7/ftp.cfg initrd=initrd.img repo=ftp://192.168.160.7/centos7      (这项我后面使用的是devfs=nomount ramdisk_size=8192)</span><br><span class="line"></span><br><span class="line">:wq</span><br></pre></td></tr></table></figure>
+<h3 id="验证无人值守安装"><a href="#验证无人值守安装" class="headerlink" title="验证无人值守安装"></a>验证无人值守安装</h3><p> 启动自动应答安装之后，当客户机每次以 PXE 方式引导时，将自动下载 ftp.cfg<br>应答配置文件，然后根据其中的设置安装CentOS7系统，无须手工干预。<br><img src="img/6.29.4.png" alt="验证"></p>
+<h2 id="vim-配置自动应答文件"><a href="#vim-配置自动应答文件" class="headerlink" title="vim 配置自动应答文件"></a>vim 配置自动应答文件</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Kickstart file automatically generated by anaconda. </span></span><br><span class="line">     </span><br><span class="line">    <span class="comment">#version=DEVEL </span></span><br><span class="line">    <span class="comment">#安装 </span></span><br><span class="line">    install </span><br><span class="line">    <span class="comment">#选择安装方式cdrom </span></span><br><span class="line">    cdrom </span><br><span class="line">    <span class="comment">#选择语言 </span></span><br><span class="line">    lang en_US.UTF-8 </span><br><span class="line">    <span class="comment">#选择键盘类型 </span></span><br><span class="line">    keyboard us </span><br><span class="line">     </span><br><span class="line">    <span class="comment">#设置你的ip地址和hostname设置后一般可以访问了。#号部分为如果你有几块网卡时，添加类似network配置即可。 </span></span><br><span class="line">    network --onboot yes --device eth0 --bootproto static --ip 192.168.1.145 --netmask 255.255.255.0 --gateway 192.168.1.1 --noipv6 --nameserver 192.168.1.1 --hostname winds </span><br><span class="line">    <span class="comment">#network --onboot yes --device eth1 --bootproto static --ip 192.168.1.146 --netmask 255.255.255.0 --gateway 192.168.1.1 --noipv6 --nameserver 192.168.1.1 --hostname winds </span></span><br><span class="line">    <span class="comment">#设置root用户的密码（此处为123456） </span></span><br><span class="line">    rootpw --plaintext 123456 </span><br><span class="line">     </span><br><span class="line">    <span class="comment">#对外开放防火墙程序ssh。 </span></span><br><span class="line">    firewall --service=ssh </span><br><span class="line">     </span><br><span class="line">    <span class="comment">#为系统设置验证选项.这和在安装后运行的authconfig命令相似.. </span></span><br><span class="line">    authconfig --enableshadow --passalgo=sha512 </span><br><span class="line">     </span><br><span class="line">    <span class="comment"># SELinux configuration 禁用selinux </span></span><br><span class="line">    selinux --disabled </span><br><span class="line">     </span><br><span class="line">    <span class="comment">#时区，亚洲上海 </span></span><br><span class="line">    timezone Asia/Shanghai </span><br><span class="line">    bootloader --location=mbr --driveorder=sda --append=<span class="string">" rhgb crashkernel=auto quiet"</span> </span><br><span class="line">     </span><br><span class="line">    <span class="comment">#文本模式安装时需要对初始化磁盘。使用--initlabel可初始化磁盘。 </span></span><br><span class="line">    <span class="comment">#需要注意的是，如果用此ks.cfg安装centos6.3时，需要自己再点一次初始化磁盘空间。 </span></span><br><span class="line">    clearpart --initlabel --all --drives=sda </span><br><span class="line">     </span><br><span class="line">    <span class="comment">#设置分区,此处将剩余空间分配给/目录，具体如何分区请按照个人详细情况划分。 </span></span><br><span class="line">    part /boot --fstype=ext4 --size=512 </span><br><span class="line">    part / --fstype=<span class="string">"ext4"</span> --grow --size=1 </span><br><span class="line">    part swap --size=1024 </span><br><span class="line">     </span><br><span class="line">    <span class="comment">#最小化安装 </span></span><br><span class="line">    %packages --nobase </span><br><span class="line">    @core </span><br><span class="line">    %end </span><br><span class="line">    <span class="comment">#安装完成后自动重启。</span></span><br><span class="line">    reboot</span><br></pre></td></tr></table></figure>
+<p>#####linux 最小安装样本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">#platform=x86, AMD64, 或 Intel EM64T</span></span><br><span class="line"><span class="comment">#version=DEVEL</span></span><br><span class="line"><span class="comment"># Install OS instead of upgrade</span></span><br><span class="line">install</span><br><span class="line"><span class="comment"># Keyboard layouts</span></span><br><span class="line">keyboard <span class="string">'us'</span></span><br><span class="line"><span class="comment"># Root password</span></span><br><span class="line">rootpw --iscrypted <span class="variable">$1</span><span class="variable">$VYVocSy5</span><span class="variable">$9oXBJ</span>/p/ftTDPs8Z31cbL/</span><br><span class="line"><span class="comment"># Use network installation</span></span><br><span class="line">url --url=<span class="string">"ftp://192.168.160.7/centos7"</span></span><br><span class="line"><span class="comment"># System language</span></span><br><span class="line">lang zh_CN</span><br><span class="line"><span class="comment"># System authorization information</span></span><br><span class="line">auth  --useshadow  --passalgo=sha512</span><br><span class="line"><span class="comment"># Use graphical install</span></span><br><span class="line">graphical</span><br><span class="line">firstboot --<span class="built_in">disable</span></span><br><span class="line"><span class="comment"># SELinux configuration</span></span><br><span class="line">selinux --disabled</span><br><span class="line"></span><br><span class="line"><span class="comment"># Firewall configuration</span></span><br><span class="line">firewall --disabled</span><br><span class="line"><span class="comment"># Network information</span></span><br><span class="line">network  --bootproto=dhcp --device=ens33</span><br><span class="line"><span class="comment"># Reboot after installation</span></span><br><span class="line">reboot</span><br><span class="line"><span class="comment"># System timezone</span></span><br><span class="line">timezone Asia/Shanghai</span><br><span class="line"><span class="comment"># System bootloader configuration</span></span><br><span class="line">bootloader --location=mbr</span><br><span class="line"><span class="comment"># Partition clearing information</span></span><br><span class="line">clearpart --all</span><br><span class="line"><span class="comment"># Disk partitioning information</span></span><br><span class="line">part /boot --fstype=<span class="string">"xfs"</span> --size=1024</span><br><span class="line">part /home --fstype=<span class="string">"xfs"</span> --size=1024</span><br><span class="line">part swap --fstype=<span class="string">"swap"</span> --size=2048</span><br><span class="line">part / --fstype=<span class="string">"xfs"</span> --grow --size=1</span><br><span class="line"></span><br><span class="line">%packages</span><br><span class="line"></span><br><span class="line">%end</span><br></pre></td></tr></table></figure>
+<h4 id="本章总结"><a href="#本章总结" class="headerlink" title="本章总结"></a>本章总结</h4><p>实现 PXE 远程装机要求网卡支持 PXE 功能，且必须有 Linux 安装源，以及可用的 TFTP，DHCP 服务器<br>无人值守的应答文件可通过 Kickstart 配置程序来完成，该程序由 system-config-kickstart软件包提供。</p>
+
+    
+
+    
+
+    
+
+  </div>
+  <div class="article-info article-info-index">
+    
+    
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">samba</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">pxe</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
+    
 
     
+
+    
+    <div class="clearfix"></div>
+  </div>
+  </div>
+</article>
+
+
+<nav id="article-nav">
+  
+    <a href="/2020/06/29/CentOS7%E9%80%9A%E8%BF%87http%E6%96%B9%E5%BC%8F%E6%90%AD%E5%BB%BA%E6%9C%AC%E5%9C%B0yum%E6%BA%90/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          CentOS7通过http方式搭建本地yum源
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/06/28/NFS%E5%85%B1%E4%BA%AB%E5%AD%98%E5%82%A8%E6%9C%8D%E5%8A%A1/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">NFS共享存储服务</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+
+
+
+
+
+
+
+
 
 
           </div>
@@ -216,9 +331,9 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: true,
 		toc_hide_index: true,

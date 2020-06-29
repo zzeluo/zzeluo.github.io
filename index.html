@@ -144,6 +144,414 @@
             
 
   
+    <article id="post-CentOS7通过http方式搭建本地yum源" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+  
+  
+    <h1 itemprop="name">
+	
+	  <a class="article-title" href="/2020/06/29/CentOS7%E9%80%9A%E8%BF%87http%E6%96%B9%E5%BC%8F%E6%90%AD%E5%BB%BA%E6%9C%AC%E5%9C%B0yum%E6%BA%90/" target="_blank">CentOS7通过http方式搭建本地yum源</a>
+  
+    </h1>
+  
+
+
+  
+  
+<a href="/2020/06/29/CentOS7%E9%80%9A%E8%BF%87http%E6%96%B9%E5%BC%8F%E6%90%AD%E5%BB%BA%E6%9C%AC%E5%9C%B0yum%E6%BA%90/" class="archive-article-date">
+        <time datetime="2020-06-29T06:02:13.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-29</time>
+</a>
+
+  
+  
+    
+
+  
+  </header>
+  
+  <div class="article-entry" itemprop="articleBody">
+    
+    
+    
+
+    
+
+    
+
+  </div>
+  <div class="article-info article-info-index">
+    
+    
+    
+
+    
+
+    
+    <div class="clearfix"></div>
+  </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-PXE高效批量网络装机" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+  
+  
+    <h1 itemprop="name">
+	
+	  <a class="article-title" href="/2020/06/29/PXE%E9%AB%98%E6%95%88%E6%89%B9%E9%87%8F%E7%BD%91%E7%BB%9C%E8%A3%85%E6%9C%BA/" target="_blank">CentOS7通过http方式搭建本地yum源</a>
+  
+    </h1>
+  
+
+
+  
+  
+<a href="/2020/06/29/PXE%E9%AB%98%E6%95%88%E6%89%B9%E9%87%8F%E7%BD%91%E7%BB%9C%E8%A3%85%E6%9C%BA/" class="archive-article-date">
+        <time datetime="2020-06-29T06:02:13.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-29</time>
+</a>
+
+  
+  
+    
+
+  
+  </header>
+  
+  <div class="article-entry" itemprop="articleBody">
+    
+    <h2 id="部署PXE远程安装服务"><a href="#部署PXE远程安装服务" class="headerlink" title="部署PXE远程安装服务"></a>部署PXE远程安装服务</h2><p>PXE 是由Intel公司开发的网络引导技术，工作在Client/Server 模式，允许客户机通过网络从远程服务器下载引导镜像，并加载安装文件或者整个操作系统。<br>若要搭建PXE 网络系统，必须满足以下几个前提条件。<br>1）客户机的网卡支持PXE 协议（集成BOOTROM 芯片），且主板支持网络引导。<br>2）网络中有一台DHCP服务器以便为客户机自动分配地址，指定引导文件位置。<br>3）服务器通过TETP(Trivial File Transfer Protocol，简单文件传输协议)提供引导镜像文件的下载。<br>其中，第一个条件实际上是硬件要求，目前绝大多数服务器和大多数PC都能够提供此支持，只需在BIOS 设置中允许从Network 或LAN 启动即可。</p>
+<p>####PXE，Pre-boot eXcution Environment<br>预启动执行环境，在操作系统之前运行<br>可用于远程安装、构建无盘工作站<br>####服务端<br>运行DHCP服务，用来分配地址、定位引导程序<br>运行TFTP服务器，提供引导程序下载<br>####客户端<br>网卡支持PXE协议<br>主板支持网络启动</p>
+<h3 id="搭建PXE-远程安装服务器"><a href="#搭建PXE-远程安装服务器" class="headerlink" title="搭建PXE 远程安装服务器"></a>搭建PXE 远程安装服务器</h3><p>本例的 PXE 远程安装服务器集成了 CentOS 7安装源，TFTP服务，DHCP服务，能够向客户机裸机发送PXE 引导程序，Linux内核，启动菜单等数据，以及提供安装文件。<br>###基本部署过程<br>准备CentOS 7 安装源（YUM仓库）<br>启用TFTP服务，并提供内核、引导程序<br>启用DHCP服务，用来分配地址、指出引导程序位置<br>配置启动菜单</p>
+<h4 id="1-准备CentOS-安装源"><a href="#1-准备CentOS-安装源" class="headerlink" title="1. 准备CentOS 安装源"></a>1. 准备CentOS 安装源</h4><p>CentOS 7 的网络安装源一般通过 HTTP,FTP 协议发布，另外也支持NFS（Network File System，网络文件系统）协议。<br>  采用FTP 协议发布安装源，可以在服务器上部署一个YUM 软件仓库。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># mkdir /var/ftp/centos7</span></span><br><span class="line">[root@ns1 ~]<span class="comment"># cp -rf /media/cdrom/* /var/ftp/centos7/</span></span><br><span class="line">[root@ns1 ~]<span class="comment"># vim /etc/yum.repos.d/centos-my.repo </span></span><br><span class="line">[my]</span><br><span class="line">name=my repodata</span><br><span class="line">baseurl=ftp://192.168.160.7/centos7</span><br><span class="line">enabled=1</span><br><span class="line">gpgcheck=0</span><br><span class="line"></span><br><span class="line">:wq</span><br><span class="line">[root@ns1 ~]<span class="comment"># systemctl start vsftpd</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="2-安装并启动TFIP-服务"><a href="#2-安装并启动TFIP-服务" class="headerlink" title="2. 安装并启动TFIP 服务"></a>2. 安装并启动TFIP 服务</h4><p>TFTP 服务由 tftp-server 软件包提供，默认由 xinetd 超级服务进行管理，依次配置文件位于/etc/xinetd.d/tftp 。<br>配置时只要将 “disable = yes”改为“disable = no”，然后启动 xinetd 服务即可。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># yum -y install tftp-server</span></span><br><span class="line">[root@ns1 ~]<span class="comment"># vim /etc/xinetd.d/tftp </span></span><br><span class="line"></span><br><span class="line">service tftp</span><br><span class="line">&#123;</span><br><span class="line">        socket_type             = dgram</span><br><span class="line">        protocol                = udp</span><br><span class="line">        <span class="built_in">wait</span>                    = yes</span><br><span class="line">        user                    = root</span><br><span class="line">        server                  = /usr/sbin/in.tftpd</span><br><span class="line">        server_args             = -s /var/lib/tftpboot       //默认的TFTP根目录</span><br><span class="line">        <span class="built_in">disable</span>                 = no</span><br><span class="line">        per_source              = 11</span><br><span class="line">        cps                     = 100 2</span><br><span class="line">        flags                   = IPv4</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">:wq</span><br><span class="line">[root@ns1 ~]<span class="comment"># systemctl enable tftp</span></span><br><span class="line">Created symlink from /etc/systemd/system/sockets.target.wants/tftp.socket to /usr/lib/systemd/system/tftp.socket.</span><br><span class="line">[root@ns1 ~]<span class="comment"># systemctl start tftp</span></span><br></pre></td></tr></table></figure>
+<h4 id="3-准备linux内核-，初始化镜像文件"><a href="#3-准备linux内核-，初始化镜像文件" class="headerlink" title="3. 准备linux内核 ，初始化镜像文件"></a>3. 准备linux内核 ，初始化镜像文件</h4><p>用于 PXE 网络安装的Linux内核，初始化镜像文件可以从 CentOS 7 系统光盘获得，分别为 vmlinuz 和 initrd.img，位于文件夹 images/pxeboot 下。找到这两个文件并将其复制到tftp 服务的根目录下。<br>  准备内核文件 vmlinuz ，初始化镜像文件 initrd.img 。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># cd /var/ftp/centos7/images/pxeboot/</span></span><br><span class="line">[root@ns1 pxeboot]<span class="comment"># ls</span></span><br><span class="line">initrd.img  TRANS.TBL  vmlinuz</span><br><span class="line">[root@ns1 pxeboot]<span class="comment"># cp vmlinuz initrd.img /var/lib/tftpboot/</span></span><br></pre></td></tr></table></figure>
+<h4 id="4-准备-PXE-引导程序，启动菜单文件"><a href="#4-准备-PXE-引导程序，启动菜单文件" class="headerlink" title="4. 准备 PXE 引导程序，启动菜单文件"></a>4. 准备 PXE 引导程序，启动菜单文件</h4><p>用于 PXE 网络安装的引导程序为 pxelinux.0 ，由软件包 syslinux 提供。安装好软件包 syslinux，然后将文件 pxelinux.0 也复制到 tftp服务的根目录下。<br>  准备引导程序文件 pxelinux.0 。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># yum -y install syslinux</span></span><br><span class="line">[root@ns1 ~]<span class="comment"># rpm -ql syslinux |grep pxelinux.0</span></span><br><span class="line">/usr/share/syslinux/gpxelinux.0</span><br><span class="line">/usr/share/syslinux/pxelinux.0</span><br><span class="line">[root@ns1 ~]<span class="comment"># cp /usr/share/syslinux/pxelinux.0 /var/lib/tftpboot/</span></span><br></pre></td></tr></table></figure>
+<p>启动菜单用来指定客户机的引导过程，包括如何调用内核，如何加载初始化镜像。<br>默认的启动菜单文件为 default，应放置在 tftp 根目录的 pxelinux.cfg 子目录下。<br>  典型的启动菜单配置可参考以下操作手动建立。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># mkdir /var/lib/tftpboot/pxelinux.cfg</span></span><br><span class="line">[root@ns1 ~]<span class="comment"># vim /var/lib/tftpboot/pxelinux.cfg/default</span></span><br><span class="line"></span><br><span class="line">default auto              //指定默认入口名称</span><br><span class="line">prompt  0				  //0 表示不等待用户控制</span><br><span class="line">label   auto</span><br><span class="line">        kernel  vmlinuz</span><br><span class="line">        append initrd=initrd.img repo=ftp://192.168.160.7/centos7</span><br><span class="line">:wq</span><br></pre></td></tr></table></figure>
+<p>其中，prompt 用来设置是否等待用户选择；label 用来定义并分隔启动项；kernel 和 append 用来定义引导参数。<br>实现无人值守安装时只需要一个如果就够了。</p>
+<h4 id="5-安装并启用DHCP-服务。"><a href="#5-安装并启用DHCP-服务。" class="headerlink" title="5. 安装并启用DHCP 服务。"></a>5. 安装并启用DHCP 服务。</h4><p>  由于 PXE 客户机通常是尚未装系统的裸机，因此为了与服务器取得联系并正确下载相关引导文件，需要预先配置好 DHCP 服务来自动分配地址并告知引导文件位置。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># yum -y install dhcp</span></span><br><span class="line">[root@ns1 ~]<span class="comment"># vim /etc/dhcp/dhcpd.conf </span></span><br><span class="line"></span><br><span class="line">option domain-name <span class="string">"kgc.com"</span>;</span><br><span class="line">option domain-name-servers www.kgc.com;</span><br><span class="line">default-lease-time 86400;</span><br><span class="line">max-lease-time 86400;</span><br><span class="line">subnet 192.168.160.0 netmask 255.255.255.0 &#123;</span><br><span class="line">        range 192.168.160.70 192.168.160.99;</span><br><span class="line">        option routers 192.168.160.2;</span><br><span class="line"></span><br><span class="line">        next-server 192.168.160.7;       //指定TFTP 服务器的地址</span><br><span class="line">        filename <span class="string">"pxelinux.0"</span>;          //指定 PXE 引导程序的文件名</span><br><span class="line">&#125;</span><br><span class="line">:wq</span><br><span class="line">[root@ns1 ~]<span class="comment"># systemctl restart dhcpd</span></span><br></pre></td></tr></table></figure>
+<h3 id="验证-PXE-网络安装"><a href="#验证-PXE-网络安装" class="headerlink" title="验证 PXE 网络安装"></a>验证 PXE 网络安装</h3><p>  搭建好的 PXE 远程安装服务器以后，就可以使用客户机进行安装测试了。对于新购买的服务器或PC裸机，一般不需要额外设置；若要为已有系统的主机重装系统，则可能需要修改 BIOS 设置，将 “Boot First” 设为 “NETWORK” 或 “LAN”, 然后重启主机。</p>
+<h2 id="实现-Kickstart-无人值守安装"><a href="#实现-Kickstart-无人值守安装" class="headerlink" title="实现 Kickstart 无人值守安装"></a>实现 Kickstart 无人值守安装</h2><p>要实现无人值守自动安装，通过使用 Kickstart 工具配置安装应答文件，自动完成安装过程中的各种设置，从而无需手动干预，提高网络装机效率，同时也可以在应答文件中通过添加 %post 脚本，完成安装后的各种配置操作。</p>
+<h4 id="kickstart无人值守技术"><a href="#kickstart无人值守技术" class="headerlink" title="kickstart无人值守技术"></a>kickstart无人值守技术</h4><p>1）创建应答文件，预先定义好各种安装设置。<br>2）免去交互设置过程，从而实现全自动化安装。<br>3）通过添加%post脚本，完成安装后的各种配置操作。</p>
+<h2 id="准备安装应答文件"><a href="#准备安装应答文件" class="headerlink" title="准备安装应答文件"></a>准备安装应答文件</h2><p> 在CentOS 7 系统中安装 system-config-kickstart 工具之后，即可通过图形化向导工具来配置安装应答文件。<br>如果用户对自动应答文件的配置比较熟悉，也可以直接编辑 自动创建的应答文件 （/root/anaconda-ks.cfg）。</p>
+<h3 id="1-配置安装应答参数"><a href="#1-配置安装应答参数" class="headerlink" title="1.配置安装应答参数"></a>1.配置安装应答参数</h3><p>  通过桌面菜单 “应用程序” → “系统工具” → “Kickstart” 即可打开 “Kickstart 配置程序”窗口。在“Kickstart<br>配置程序”窗口中，可以针对 基本配置，安装方法，引导装载程序选项，分区信息，网络配置等各种安装设置进行指定。<br>#####(1)基本配置及安装方法<br>“基础配置” 例如，将默认语言设置为“Eenglish” 时区设置为 “Asia/Shanghai” 根口令设为“1”。<br><img src="img/6.29.png" alt="基础配置"><br>在 “安装方法” 界面中，应正确指定 CentOS 7的安装方法，<br><img src="img/6.29.1.png" alt="安装方法"><br>#####(2)分区信息<br>需正确规划硬盘划分方案。<br>例如，可划分一个500MB的boot分区，4GB的home分区，2GB的 swap分区，将剩余空间划分给根分区，<br><img src="img/6.29.2.png" alt="分区信息"><br>#####(3)网络配置及防火墙配置<br>在 “网络设置” 界面中，添加一个网络设备 “eth0”，将网络类型设为“DHCP”。<br>在 “防火墙配置” 界面中，可以选择禁用 SELinux ，禁用防火墙。<br>#####(4)软件包选择<br>在 “软件包选择” 界面中，根据实际需要选择要安装的软件包分组。<br>#####(5)安装脚本<br>在 “预安装脚本” “安装后脚本” 界面中，可以分别添加在安装前，安装后自动运行的可执行语句。<br><img src="img/6.29.3.png" alt="脚本设置"></p>
+<p>###**  “引导装载程序选项” 界面要选择 安装新引导装载程序<br><img src="img/6.29.5.png" alt="引导程序"></p>
+<h3 id="2-保存自动应答文件"><a href="#2-保存自动应答文件" class="headerlink" title="2. 保存自动应答文件"></a>2. 保存自动应答文件</h3><p> 选择 “Kickstart 配置程序”窗口的 “文件” → “保存” 命令，指定目标文件夹，文件名，将配置好的应答参数保存为文本文件。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># grep -v ^# /root/ftp.cfg </span></span><br><span class="line"></span><br><span class="line">install</span><br><span class="line">keyboard <span class="string">'us'</span></span><br><span class="line">rootpw --iscrypted <span class="variable">$1</span><span class="variable">$VYVocSy5</span><span class="variable">$9oXBJ</span>/p/ftTDPs8Z31cbL/</span><br><span class="line">url --url=<span class="string">"ftp://192.168.160.7/centos7"</span></span><br><span class="line">lang zh_CN</span><br><span class="line">auth  --useshadow  --passalgo=sha512</span><br><span class="line">graphical</span><br><span class="line">firstboot --<span class="built_in">disable</span></span><br><span class="line">selinux --disabled</span><br><span class="line"></span><br><span class="line">firewall --disabled</span><br><span class="line">network  --bootproto=dhcp --device=ens33</span><br><span class="line">reboot</span><br><span class="line">timezone Asia/Shanghai</span><br><span class="line">bootloader --location=mbr</span><br><span class="line">clearpart --all</span><br><span class="line">part /boot --fstype=<span class="string">"xfs"</span> --size=1024</span><br><span class="line">part /home --fstype=<span class="string">"xfs"</span> --size=1024</span><br><span class="line">part swap --fstype=<span class="string">"swap"</span> --size=2048</span><br><span class="line">part / --fstype=<span class="string">"xfs"</span> --grow --size=1</span><br><span class="line"></span><br><span class="line">%packages</span><br><span class="line"></span><br><span class="line">%end</span><br></pre></td></tr></table></figure>
+
+<h2 id="实现批量自动装机"><a href="#实现批量自动装机" class="headerlink" title="实现批量自动装机"></a>实现批量自动装机</h2><p>有了自动安装的应答文件之后，只要将其放置在 PXE 安装服务器的 FTP 目录下，并适当修改引导菜单，就可以实现基于网络的批量自动装机了。</p>
+<h3 id="1-启用启动应答文件"><a href="#1-启用启动应答文件" class="headerlink" title="1. 启用启动应答文件"></a>1. 启用启动应答文件</h3><p>在 PXE 远程安装服务器中，将上一节建立的应答文件复制到 /var/ftp/centos7 目录下，使客户端能够通过 <a href="ftp://192.168.160.7/centos7/ftp.cfg">ftp://192.168.160.7/centos7/ftp.cfg</a> 访问。然后编辑引导菜单文件 default，添加 ks 引导参数以指定 ftp.cfg 应答文件的URL路径。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># cp /root/ftp.cfg /var/ftp/centos7/ftp.cfg</span></span><br><span class="line">[root@ns1 ~]<span class="comment"># vim /var/lib/tftpboot/pxelinux.cfg/default </span></span><br><span class="line"></span><br><span class="line">default auto</span><br><span class="line">prompt  0</span><br><span class="line">label   auto</span><br><span class="line">        kernel  vmlinuz</span><br><span class="line">        append ks=ftp://192.168.160.7/centos7/ftp.cfg initrd=initrd.img repo=ftp://192.168.160.7/centos7      (这项我后面使用的是devfs=nomount ramdisk_size=8192)</span><br><span class="line"></span><br><span class="line">:wq</span><br></pre></td></tr></table></figure>
+<h3 id="验证无人值守安装"><a href="#验证无人值守安装" class="headerlink" title="验证无人值守安装"></a>验证无人值守安装</h3><p> 启动自动应答安装之后，当客户机每次以 PXE 方式引导时，将自动下载 ftp.cfg<br>应答配置文件，然后根据其中的设置安装CentOS7系统，无须手工干预。<br><img src="img/6.29.4.png" alt="验证"></p>
+<h2 id="vim-配置自动应答文件"><a href="#vim-配置自动应答文件" class="headerlink" title="vim 配置自动应答文件"></a>vim 配置自动应答文件</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Kickstart file automatically generated by anaconda. </span></span><br><span class="line">     </span><br><span class="line">    <span class="comment">#version=DEVEL </span></span><br><span class="line">    <span class="comment">#安装 </span></span><br><span class="line">    install </span><br><span class="line">    <span class="comment">#选择安装方式cdrom </span></span><br><span class="line">    cdrom </span><br><span class="line">    <span class="comment">#选择语言 </span></span><br><span class="line">    lang en_US.UTF-8 </span><br><span class="line">    <span class="comment">#选择键盘类型 </span></span><br><span class="line">    keyboard us </span><br><span class="line">     </span><br><span class="line">    <span class="comment">#设置你的ip地址和hostname设置后一般可以访问了。#号部分为如果你有几块网卡时，添加类似network配置即可。 </span></span><br><span class="line">    network --onboot yes --device eth0 --bootproto static --ip 192.168.1.145 --netmask 255.255.255.0 --gateway 192.168.1.1 --noipv6 --nameserver 192.168.1.1 --hostname winds </span><br><span class="line">    <span class="comment">#network --onboot yes --device eth1 --bootproto static --ip 192.168.1.146 --netmask 255.255.255.0 --gateway 192.168.1.1 --noipv6 --nameserver 192.168.1.1 --hostname winds </span></span><br><span class="line">    <span class="comment">#设置root用户的密码（此处为123456） </span></span><br><span class="line">    rootpw --plaintext 123456 </span><br><span class="line">     </span><br><span class="line">    <span class="comment">#对外开放防火墙程序ssh。 </span></span><br><span class="line">    firewall --service=ssh </span><br><span class="line">     </span><br><span class="line">    <span class="comment">#为系统设置验证选项.这和在安装后运行的authconfig命令相似.. </span></span><br><span class="line">    authconfig --enableshadow --passalgo=sha512 </span><br><span class="line">     </span><br><span class="line">    <span class="comment"># SELinux configuration 禁用selinux </span></span><br><span class="line">    selinux --disabled </span><br><span class="line">     </span><br><span class="line">    <span class="comment">#时区，亚洲上海 </span></span><br><span class="line">    timezone Asia/Shanghai </span><br><span class="line">    bootloader --location=mbr --driveorder=sda --append=<span class="string">" rhgb crashkernel=auto quiet"</span> </span><br><span class="line">     </span><br><span class="line">    <span class="comment">#文本模式安装时需要对初始化磁盘。使用--initlabel可初始化磁盘。 </span></span><br><span class="line">    <span class="comment">#需要注意的是，如果用此ks.cfg安装centos6.3时，需要自己再点一次初始化磁盘空间。 </span></span><br><span class="line">    clearpart --initlabel --all --drives=sda </span><br><span class="line">     </span><br><span class="line">    <span class="comment">#设置分区,此处将剩余空间分配给/目录，具体如何分区请按照个人详细情况划分。 </span></span><br><span class="line">    part /boot --fstype=ext4 --size=512 </span><br><span class="line">    part / --fstype=<span class="string">"ext4"</span> --grow --size=1 </span><br><span class="line">    part swap --size=1024 </span><br><span class="line">     </span><br><span class="line">    <span class="comment">#最小化安装 </span></span><br><span class="line">    %packages --nobase </span><br><span class="line">    @core </span><br><span class="line">    %end </span><br><span class="line">    <span class="comment">#安装完成后自动重启。</span></span><br><span class="line">    reboot</span><br></pre></td></tr></table></figure>
+<p>#####linux 最小安装样本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">#platform=x86, AMD64, 或 Intel EM64T</span></span><br><span class="line"><span class="comment">#version=DEVEL</span></span><br><span class="line"><span class="comment"># Install OS instead of upgrade</span></span><br><span class="line">install</span><br><span class="line"><span class="comment"># Keyboard layouts</span></span><br><span class="line">keyboard <span class="string">'us'</span></span><br><span class="line"><span class="comment"># Root password</span></span><br><span class="line">rootpw --iscrypted <span class="variable">$1</span><span class="variable">$VYVocSy5</span><span class="variable">$9oXBJ</span>/p/ftTDPs8Z31cbL/</span><br><span class="line"><span class="comment"># Use network installation</span></span><br><span class="line">url --url=<span class="string">"ftp://192.168.160.7/centos7"</span></span><br><span class="line"><span class="comment"># System language</span></span><br><span class="line">lang zh_CN</span><br><span class="line"><span class="comment"># System authorization information</span></span><br><span class="line">auth  --useshadow  --passalgo=sha512</span><br><span class="line"><span class="comment"># Use graphical install</span></span><br><span class="line">graphical</span><br><span class="line">firstboot --<span class="built_in">disable</span></span><br><span class="line"><span class="comment"># SELinux configuration</span></span><br><span class="line">selinux --disabled</span><br><span class="line"></span><br><span class="line"><span class="comment"># Firewall configuration</span></span><br><span class="line">firewall --disabled</span><br><span class="line"><span class="comment"># Network information</span></span><br><span class="line">network  --bootproto=dhcp --device=ens33</span><br><span class="line"><span class="comment"># Reboot after installation</span></span><br><span class="line">reboot</span><br><span class="line"><span class="comment"># System timezone</span></span><br><span class="line">timezone Asia/Shanghai</span><br><span class="line"><span class="comment"># System bootloader configuration</span></span><br><span class="line">bootloader --location=mbr</span><br><span class="line"><span class="comment"># Partition clearing information</span></span><br><span class="line">clearpart --all</span><br><span class="line"><span class="comment"># Disk partitioning information</span></span><br><span class="line">part /boot --fstype=<span class="string">"xfs"</span> --size=1024</span><br><span class="line">part /home --fstype=<span class="string">"xfs"</span> --size=1024</span><br><span class="line">part swap --fstype=<span class="string">"swap"</span> --size=2048</span><br><span class="line">part / --fstype=<span class="string">"xfs"</span> --grow --size=1</span><br><span class="line"></span><br><span class="line">%packages</span><br><span class="line"></span><br><span class="line">%end</span><br></pre></td></tr></table></figure>
+<h4 id="本章总结"><a href="#本章总结" class="headerlink" title="本章总结"></a>本章总结</h4><p>实现 PXE 远程装机要求网卡支持 PXE 功能，且必须有 Linux 安装源，以及可用的 TFTP，DHCP 服务器<br>无人值守的应答文件可通过 Kickstart 配置程序来完成，该程序由 system-config-kickstart软件包提供。</p>
+
+    
+
+    
+
+    
+
+  </div>
+  <div class="article-info article-info-index">
+    
+    
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">pxe</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+    
+
+    
+
+    
+    <div class="clearfix"></div>
+  </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-NFS共享存储服务" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+  
+  
+    <h1 itemprop="name">
+	
+	  <a class="article-title" href="/2020/06/28/NFS%E5%85%B1%E4%BA%AB%E5%AD%98%E5%82%A8%E6%9C%8D%E5%8A%A1/" target="_blank">NFS共享存储服务</a>
+  
+    </h1>
+  
+
+
+  
+  
+<a href="/2020/06/28/NFS%E5%85%B1%E4%BA%AB%E5%AD%98%E5%82%A8%E6%9C%8D%E5%8A%A1/" class="archive-article-date">
+        <time datetime="2020-06-28T06:31:33.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-28</time>
+</a>
+
+  
+  
+    
+
+  
+  </header>
+  
+  <div class="article-entry" itemprop="articleBody">
+    
+    <p>NFS 是一种基于 TCP/IP 传输的网络文件系统协议，最初由sun公司开发。通过使用NFS协议，NFS客户机可以像访问本地目录一样访问远程NFS服务器中的共享资源。对于大多数负载均衡群集来说，使用NFS协议来共享数据存储是比较常见的做法，NFS也是NAS存储设备必然支持的一种协议。但是，NFS 没有用户认证机制，而且数据在网上明文传输，所以安全性很差，一般只能在局域网中使用。</p>
+<h3 id="NFS-应用场景"><a href="#NFS-应用场景" class="headerlink" title="NFS 应用场景"></a>NFS 应用场景</h3><p>在企业集群架构的工作场景中，特别是中小型网站公司，NFS网络文件系统一般被用来存储共享视频，图片等静态资源文件。<br>NFS 服务的实现依赖于 RPC（Remote Process Call，远程过程调用）机制，RPC 充当NFS 客户端和NFS 服务器的中介，以完成远程到本地的映射过程。<br>在CentOS7 系统中，需要安装 nfs-utils (用于NFS 共享发布和访问)； rpcbind （用于RPC支持）。</p>
+<h3 id="安装-nfs-utils，rpcbind-软件包"><a href="#安装-nfs-utils，rpcbind-软件包" class="headerlink" title="安装 nfs-utils，rpcbind 软件包"></a>安装 nfs-utils，rpcbind 软件包</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># yum -y install nfs-utils rpcbind</span></span><br><span class="line">[root@ns1 ~]<span class="comment"># systemctl enable nfs</span></span><br><span class="line">[root@ns1 ~]<span class="comment"># systemctl enable rpcbind</span></span><br></pre></td></tr></table></figure>
+<h3 id="设置共享目录"><a href="#设置共享目录" class="headerlink" title="设置共享目录"></a>设置共享目录</h3><p>NFS 的配置文件为/etc/exports ，文件内容默认为空（无任何共享）。<br>在 exports文件中设置共享资源时，记录格式为“目录位置 客户机地址(权限选项)”。<br>######例如：将文件夹/media/loop 共享给192.168.160.5 网址使用，允许读写操作，</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># mkdir -p /media/loop</span></span><br><span class="line">[root@ns1 media]<span class="comment"># vim /etc/exports          </span></span><br><span class="line">/media/loop    192.168.160.5/24(rw,sync,no_root_squash)</span><br><span class="line"></span><br><span class="line">:wq</span><br></pre></td></tr></table></figure>
+<p>######其中客户机的地址可以是主机名，IP地址，网段地址，允许使用“* ” “？”通配符；<br>权限选项中的 rw 表示允许读写（ro 为只读），sync 表示同步写入，no_root_squash 表示当客户机以root身份访问时赋予本地root权限（默认是root_squash,将作为nfsnobody 用户降权对待）。<br>  当需要将同一个目录共享给不同的客户机时，且分配不同的权限时，只要以空格分隔指定多个“客户机（权限选项）”即可。<br>  例如，将/media/loop 目录共享给两个客户机，并分别给予只读，读写权限；</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># vim /etc/exports</span></span><br><span class="line">/media/loop     192.168.160.5/24(ro) 192.168.160.10/24(rw)</span><br></pre></td></tr></table></figure>
+<h4 id="启动NFS服务程序"><a href="#启动NFS服务程序" class="headerlink" title="启动NFS服务程序"></a>启动NFS服务程序</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># systemctl start rpcbind</span></span><br><span class="line">[root@ns1 ~]<span class="comment"># systemctl start nfs</span></span><br><span class="line">[root@ns1 ~]<span class="comment"># netstat -anpt |grep rpcbind</span></span><br><span class="line">tcp        0      0 0.0.0.0:111             0.0.0.0:*               LISTEN      6451/rpcbind        </span><br><span class="line">tcp6       0      0 :::111                  :::*                    LISTEN      6451/rpcbind</span><br></pre></td></tr></table></figure>
+<h4 id="查看本机发布的NFS共享目录"><a href="#查看本机发布的NFS共享目录" class="headerlink" title="查看本机发布的NFS共享目录"></a>查看本机发布的NFS共享目录</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># showmount -e</span></span><br><span class="line">Export list <span class="keyword">for</span> ns1.kgc.com:</span><br><span class="line">/media/loop/ 192.168.160.0/24</span><br><span class="line">/home        192.168.160.5/24</span><br></pre></td></tr></table></figure>
+<h2 id="在客户机中访问NFS共享资源"><a href="#在客户机中访问NFS共享资源" class="headerlink" title="在客户机中访问NFS共享资源"></a>在客户机中访问NFS共享资源</h2><p>NFS 协议的目标是提供一种网络文件系统，因此对NFS共享的访问也是用mount命令来进行挂载，对于的文件系统类型为nfs。<br>既可以手动挂载，也可以加入fstab 配置文件来实现开机自动挂载。</p>
+<h4 id="安装rpcbind-软件包，并启动rpcbind服务"><a href="#安装rpcbind-软件包，并启动rpcbind服务" class="headerlink" title="安装rpcbind 软件包，并启动rpcbind服务"></a>安装rpcbind 软件包，并启动rpcbind服务</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># yum -y install rpcbind nfs-utils</span></span><br><span class="line">[root@localhost ~]<span class="comment"># systemctl enable rpcbind</span></span><br><span class="line">[root@localhost ~]<span class="comment"># systemctl start rpcbind</span></span><br></pre></td></tr></table></figure>
+<p>若已经安装了 nfs-utils 软件包，则客户机也可以使用showmount 查看NFS服务器端共享了那些目录，<br>查询格式为“showmount -e 服务器地址”。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@ns2 ~]<span class="comment"># showmount -e 192.168.160.7</span></span><br><span class="line">Export list <span class="keyword">for</span> 192.168.160.7:</span><br><span class="line">/media/loop/ 192.168.160.0/24</span><br><span class="line">/home        192.168.160.5/24</span><br></pre></td></tr></table></figure>
+<h4 id="手动挂载NFS-共享目录"><a href="#手动挂载NFS-共享目录" class="headerlink" title="手动挂载NFS 共享目录"></a>手动挂载NFS 共享目录</h4><p>以root的身份执行mount操作，将NFS服务器共享的/home 目录挂载到本地目录 /var/kgc。<br>与挂载本地系统不同的是，设备处应指出服务器地址。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@ns2 ~]<span class="comment"># mkdir /var/kgc</span></span><br><span class="line">[root@ns2 ~]<span class="comment"># mount 192.168.160.7:/home /var/kgc</span></span><br><span class="line">[root@ns2 ~]<span class="comment"># tail -1 /etc/mtab </span></span><br><span class="line">192.168.160.7:/home /var/kgc nfs4 rw,relatime,vers=4.1,rsize=262144,wsize=262144,namlen=255,hard,proto=tcp,port=0,timeo=600,retrans=2,sec=sys,clientaddr=192.168.160.5,local_lock=none,addr=192.168.160.7 0 0</span><br><span class="line">[root@ns2 ~]<span class="comment"># vi /var/kgc/index.html</span></span><br><span class="line">Real Web Server Document</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[root@ns1 ~]<span class="comment"># ls /home/       //服务器中验证，</span></span><br><span class="line">index.html</span><br></pre></td></tr></table></figure>
+<h3 id="fstab-自动挂载设置"><a href="#fstab-自动挂载设置" class="headerlink" title="fstab 自动挂载设置"></a>fstab 自动挂载设置</h3><p>修改 /etc/fstab 配置文件，加入NFS共享目录的挂载设置。注意将文件系统类型设为nfs，挂载参数建议添加_netdev(设备需要网络)； 若添加 soft ，intr 参数可以实现软过载，允许在网络中断时放弃挂载。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@ns2 ~]<span class="comment"># vim /etc/fstab </span></span><br><span class="line">…… //省略部分信息</span><br><span class="line">192.168.7.250:/opt/wwwroot /var/www/html nfs  defaults,_netdev 0 0</span><br><span class="line"></span><br><span class="line">:wq</span><br></pre></td></tr></table></figure>
+<h3 id="强制卸载-NFS"><a href="#强制卸载-NFS" class="headerlink" title="强制卸载 NFS"></a>强制卸载 NFS</h3><p>NFS 客户端与服务器端的耦合度非常高的，如果客户端正在挂载使用，服务器端的NFS服务突然间停掉了，那么客户端就会出现执行df -h 命令卡死的现象。这个时候使用umont 命令是无法直接卸载的，需要加上 -lf 才能卸载。<br>    当出现卡死现象时，要重新开一终端，执行 cat/etc/rc.local 命令，查看挂载点。<br>    然后使用 umonut命令卸载，其中 -l表示解除正在繁忙的文件系统， -f表示强制。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@ns2 ~]<span class="comment"># umount /mnt</span></span><br><span class="line">umount: /mnt：目标忙。</span><br><span class="line">        (有些情况下通过 lsof(8) 或 fuser(1) 可以</span><br><span class="line">         找到有关使用该设备的进程的有用信息) </span><br><span class="line">[root@ns2 ~]<span class="comment"># umount -lf /mnt</span></span><br></pre></td></tr></table></figure>
+
+<p>###NFS 常见故障解决思路<br>当NFS共享无法挂载使用时，首先要检查配置文件的正确性，查看是否允许该网段的访问，然后将服务端的NFS服务和rpcbind服务都要开启，同时客户端也要开启rpcbind服务，这是能够成功挂载使用NFS共享存储的大前提。<br>在两边服务器都开启的情况下，如果客户端挂载共享存储出现长时间挂载等待的情况，此时要ping服务器的地址，检测客户端到服务器端的网络是否正常。<br>如果客户端到服务器端的网络是没有问题的，但是还是无法 mount挂载使用，可以使用 telntr 命令加服务器端的地址和端口号，远程连接服务器。当出现“connected to ……”的字样时，表示已经连接上了。这就表示客户端与服务器是通的。<br>客户端无法正常访问服务器端，也有可能是 iptables导致的，使用telnet 命令连接服务器时会显示“no route to host”的字样，这就表示时防火墙的问题。在服务器端本地 telnet 自己，如果正常就表示服务器端时没有问题的。<br>当然也可以使用 showmount -e 命令检查，或者是在服务端 mount 挂载自己本地共享的目录看能否挂载成功。</p>
+<h3 id="NFS-客户端mount-的挂载参数说明"><a href="#NFS-客户端mount-的挂载参数说明" class="headerlink" title="NFS 客户端mount 的挂载参数说明"></a>NFS 客户端mount 的挂载参数说明</h3><p>在linux 系统中，可以使用 mount命令挂载光盘镜像文件，移动硬盘，U盘以及Windows 网络共享和UNIX NFS网络共享。</p>
+<h4 id="mount-o-命令后面常用参数"><a href="#mount-o-命令后面常用参数" class="headerlink" title="mount -o 命令后面常用参数"></a>mount -o 命令后面常用参数</h4><p>noatime ：不更新文件系统上的inode访问时间，高并发环境下应该使用该选项，可以提高1/0 性能。<br>nodiratime ：不更新文件系统上的 directory inode 访问时间，高并发环境下推荐使用该选项，可以提高1/0 性能。<br>noexec ：不允许执行程序，但是 shell，PHP 程序还是可以执行的。<br>nosuid ：不允许设置 uid。<br>remount ：尝试重新挂载一个已经挂载了的文件系统，这通常被用来改变文件系统的挂载标志，从而使得一个只读文件系统变得可写，这个动作不会改变设备或者挂载点。<br>ro ：挂载一个只读文件系统。<br>rw ：挂载一个可写的文件系统。<br>sync ：有 1/0操作时，会同步处理 1/0，把数据同步写入硬盘。使用此参数会影响1/0性能，但是可以保证数据的安全性。</p>
+<h3 id="mount-挂载及-fstab-文件的参数表格"><a href="#mount-挂载及-fstab-文件的参数表格" class="headerlink" title="mount 挂载及 fstab 文件的参数表格"></a>mount 挂载及 fstab 文件的参数表格</h3><h3 id="查看客户端挂载的参数"><a href="#查看客户端挂载的参数" class="headerlink" title="查看客户端挂载的参数"></a>查看客户端挂载的参数</h3><p>在Linux 下使用 “grep mnt /proc/mounts” 命令可以查看客户端挂载参数。</p>
+<h3 id="本章总结"><a href="#本章总结" class="headerlink" title="本章总结"></a>本章总结</h3><p>YUM 软件仓库主要通过 HTTP 或 FTP 方式进行发布，且需要提供 repodata 数据，其中包含所有 rpm包文件的头信息。<br>使用yum 命令查询软件包时，可用的子命令包括 list ，info，search，分别用于查询软件包列表，查询软件包的描述信息，查询指定的软件包。<br>使用 yum 命令安装，升级，卸载软件包时，对应的子命令分别为 install ，update，remove。<br>NFS 服务的实现依赖于 RPC机制，RPC 充当NFS 客户端和NFS 服务器的中介。在 CentOS 7 系统中，需要安装 nfs-utils ，rpcbind 软件包来提供 NFS共享服务，前者由于 NFS共享发布和访问，后者用于 RPC支持。<br>对 NFS 共享的访问使用 mount 命令来进行挂载，对应的文件系统类型为 nfs。既可以手动挂载，也可以加入 fstab 配置文件来实现开机自动挂载。</p>
+
+    
+
+    
+
+    
+
+  </div>
+  <div class="article-info article-info-index">
+    
+    
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">nfs</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+    
+
+    
+
+    
+    <div class="clearfix"></div>
+  </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-部署YUN仓库" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+  
+  
+    <h1 itemprop="name">
+	
+	  <a class="article-title" href="/2020/06/28/%E9%83%A8%E7%BD%B2YUN%E4%BB%93%E5%BA%93/" target="_blank">部署YUN仓库及NFS共享服务</a>
+  
+    </h1>
+  
+
+
+  
+  
+<a href="/2020/06/28/%E9%83%A8%E7%BD%B2YUN%E4%BB%93%E5%BA%93/" class="archive-article-date">
+        <time datetime="2020-06-28T06:31:33.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-28</time>
+</a>
+
+  
+  
+    
+
+  
+  </header>
+  
+  <div class="article-entry" itemprop="articleBody">
+    
+    <h2 id="YUM-Yellow-dog-Updater-Modified"><a href="#YUM-Yellow-dog-Updater-Modified" class="headerlink" title="YUM, Yellow dog Updater Modified"></a>YUM, Yellow dog Updater Modified</h2><p>基于RPM包构建的软件更新机制。<br>可以自动解决依赖关系<br>所有软件包由集中的YUM软件仓库提供。<br><img src="img/6.28.png" alt="YUM概述"></p>
+<h4 id="软件仓库的提供方式"><a href="#软件仓库的提供方式" class="headerlink" title="软件仓库的提供方式"></a>软件仓库的提供方式</h4><p>FTP服务：ftp://……<br>HTTP服务：http://……<br>本地目录：file://……</p>
+<h4 id="RPM软件包的来源"><a href="#RPM软件包的来源" class="headerlink" title="RPM软件包的来源"></a>RPM软件包的来源</h4><p>CentOS发布的RPM包集合<br>第三方组织发布的RPM包集合<br>用户自定义的RPM包集合</p>
+<h3 id="构建CentOS-7-软件仓库"><a href="#构建CentOS-7-软件仓库" class="headerlink" title="构建CentOS 7 软件仓库"></a>构建CentOS 7 软件仓库</h3><p>RPM包来自CentOS 7 DVD光盘<br>通过FTP,HTTP或本地目录提供给客户。<br>######1）准备软件仓库目录</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># mkdir cdrom</span></span><br><span class="line">[root@ns1 ~]<span class="comment"># mount /dev/sr0 cdrom</span></span><br><span class="line">[root@ns1 cdrom]<span class="comment"># df -hT</span></span><br><span class="line">文件系统                类型      容量  已用  可用 已用% 挂载点</span><br><span class="line">/dev/mapper/centos-root xfs        17G  5.4G   12G   32% /</span><br><span class="line">devtmpfs                devtmpfs  975M     0  975M    0% /dev</span><br><span class="line">tmpfs                   tmpfs     992M     0  992M    0% /dev/shm</span><br><span class="line">tmpfs                   tmpfs     992M   11M  981M    2% /run</span><br><span class="line">tmpfs                   tmpfs     992M     0  992M    0% /sys/fs/cgroup</span><br><span class="line">/dev/sr0                iso9660   4.2G  4.2G     0  100% /root/cdrom</span><br><span class="line">[root@localhost ~]<span class="comment"># mkdir -p /var/ftp/centos7          //递归的形式创建文件即使没有目录也会一起创建。</span></span><br><span class="line">[root@ns1 ~]<span class="comment"># cp -rf cdrom/* /var/ftp/centos7/         //递归的形式强制复制文件</span></span><br></pre></td></tr></table></figure>
+<p>######安装并启动vsftpd 服务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># rpm -ivh /media/cdrom/Packages/vsftpd-3.0.2-21.el7.x86_64.rpm</span></span><br><span class="line">[root@localhost ~]<span class="comment"># systemctl start vsftpd</span></span><br><span class="line">[root@localhost ~]<span class="comment"># systemctl enable vsftpd</span></span><br><span class="line">[root@ns1 ~]<span class="comment"># systemctl status vsftpd          //查看进程运行状态</span></span><br><span class="line">● vsftpd.service - Vsftpd ftp daemon</span><br><span class="line">   Loaded: loaded (/usr/lib/systemd/system/vsftpd.service; enabled; vendor preset: disabled)</span><br><span class="line">   Active: active (running) since 一 2020-06-29 17:06:46 CST; 2s ago</span><br><span class="line">  Process: 3049 ExecStart=/usr/sbin/vsftpd /etc/vsftpd/vsftpd.conf (code=exited, status=0/SUCCESS)</span><br><span class="line"> Main PID: 3050 (vsftpd)</span><br><span class="line">    Tasks: 1</span><br><span class="line">   CGroup: /system.slice/vsftpd.service</span><br><span class="line">           └─3050 /usr/sbin/vsftpd /etc/vsftpd/vsftpd.conf</span><br></pre></td></tr></table></figure>
+<p>######验证</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">[root@ns2 cdrom]<span class="comment"># ftp</span></span><br><span class="line">-bash: ftp: 未找到命令</span><br><span class="line">[root@ns2 cdrom]<span class="comment"># yum provides ftp         // 查找提供指定内容的软件包</span></span><br><span class="line">已加载插件：fastestmirror</span><br><span class="line">Loading mirror speeds from cached hostfile</span><br><span class="line"> * base: mirrors.nju.edu.cn</span><br><span class="line"> * extras: mirrors.cqu.edu.cn</span><br><span class="line"> * updates: mirrors.cqu.edu.cn</span><br><span class="line">base                                                                                                                                    | 3.6 kB  00:00:00     </span><br><span class="line">extras                                                                                                                                  | 2.9 kB  00:00:00     </span><br><span class="line">updates                                                                                                                                 | 2.9 kB  00:00:00     </span><br><span class="line">updates/7/x86_64/primary_db                                                                                                             | 2.9 MB  00:00:05     </span><br><span class="line">ftp-0.17-67.el7.x86_64 : The standard UNIX FTP (File Transfer Protocol) client</span><br><span class="line">源    ：base</span><br><span class="line">[root@ns2 cdrom]<span class="comment"># yum install -y ftp</span></span><br><span class="line">[root@ns2 ~]<span class="comment"># ftp 192.168.160.7</span></span><br><span class="line">Connected to 192.168.160.7 (192.168.160.7).</span><br><span class="line">220 (vsFTPd 3.0.2)</span><br><span class="line">Name (192.168.160.7:root): ftp</span><br><span class="line">331 Please specify the password.</span><br><span class="line">Password:</span><br><span class="line">230 Login successful.</span><br><span class="line">Remote system <span class="built_in">type</span> is UNIX.</span><br><span class="line">Using binary mode to transfer files.</span><br><span class="line">ftp&gt; ls</span><br><span class="line">227 Entering Passive Mode (192,168,160,7,43,224).</span><br><span class="line">150 Here comes the directory listing.</span><br><span class="line">drwxr-xr-x    8 0        0             220 Jun 29 08:55 centos7</span><br><span class="line">drwxr-xr-x    2 14       0               6 Apr 01 04:55 pub</span><br><span class="line">drwxrwxrwx    3 1001     0              26 Jun 23 14:31 upload</span><br><span class="line">226 Directory send OK.</span><br><span class="line">ftp&gt; <span class="built_in">cd</span> centos7</span><br><span class="line">250 Directory successfully changed.</span><br><span class="line">ftp&gt; ls</span><br><span class="line">227 Entering Passive Mode (192,168,160,7,40,245).</span><br><span class="line">150 Here comes the directory listing.</span><br><span class="line">-rw-r--r--    1 0        0              14 Jun 29 08:54 CentOS_BuildTag</span><br><span class="line">drwxr-xr-x    3 0        0              35 Jun 29 08:54 EFI</span><br><span class="line">-rw-r--r--    1 0        0             227 Jun 29 08:54 EULA</span><br><span class="line">-rw-r--r--    1 0        0           18009 Jun 29 08:54 GPL</span><br><span class="line">drwxr-xr-x    2 0        0              43 Jun 29 08:54 LiveOS</span><br><span class="line">drwxr-xr-x    2 0        0          221184 Jun 29 08:55 Packages</span><br><span class="line">-rw-r--r--    1 0        0            1690 Jun 29 08:55 RPM-GPG-KEY-CentOS-7</span><br><span class="line">-rw-r--r--    1 0        0            1690 Jun 29 08:55 RPM-GPG-KEY-CentOS-Testing-7</span><br><span class="line">-r--r--r--    1 0        0            2883 Jun 29 08:55 TRANS.TBL</span><br><span class="line">drwxr-xr-x    3 0        0              57 Jun 29 08:54 images</span><br><span class="line">drwxr-xr-x    2 0        0             198 Jun 29 08:54 isolinux</span><br><span class="line">drwxr-xr-x    2 0        0            4096 Jun 29 08:55 repodata</span><br><span class="line">226 Directory send OK.</span><br><span class="line">ftp&gt; quit</span><br></pre></td></tr></table></figure>
+<p>#####在软件仓库中加入非官方RPM包组<br>对于用户搜集的非CentOS7 光盘自带的更多其他软件包（必须包括存在依赖关系的所有安装文件），除了应准备相应的目录之外，还需要手动创建仓库（repodata）数据文件，这就要用到createrepo工具。<br>包括存在依赖关系的所有RPM包。<br>使用createrepo 工具建立仓库数据文件。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># mkdir /var/ftp/other</span></span><br><span class="line">[root@localhost ~]<span class="comment"># cd /var/ftp/other</span></span><br><span class="line">[root@localhost other]<span class="comment"># createrepo -g /media/cdrom/repodata/repomd.xml ./</span></span><br></pre></td></tr></table></figure>
+<p>###为客户机指定YUM仓库位置<br>配置文件：/etc/yum.repos.d/* .repo</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># vim /etc/yum.repos.d/centos-my.repo </span></span><br><span class="line">[my]                                      //仓库名字</span><br><span class="line">name=my repodata                          //仓库说明</span><br><span class="line">baseurl=ftp://192.168.160.7/centos7       //URL访问路径</span><br><span class="line">enabled=1                                  //启用此软件仓库</span><br><span class="line">gpgcheck=0                               //0不验证软件包的签名</span><br><span class="line"></span><br><span class="line">：wq</span><br><span class="line">[root@ns1 ~]<span class="comment"># yum clean all             //清理缓存数据</span></span><br><span class="line">[root@ns1 ~]<span class="comment"># yum repolist             //显示已配置的源</span></span><br><span class="line">已加载插件：fastestmirror, langpacks</span><br><span class="line">Loading mirror speeds from cached hostfile</span><br><span class="line">源标识                                                                    源名称                                                                          状态</span><br><span class="line">my                                                                        my repodata                                                                     3,971</span><br><span class="line">repolist: 3,971</span><br></pre></td></tr></table></figure>
+<p>上述操作中，centos-my.repo 需要手动创建，/etc/yum.repos.d 目录下若有其他为用的“* .repo”文件建议将其删除。配置“enabled=1” 为默认项，可以省略；“gpgcheck”和“gpgkey”两行配置用来检查软包是否为Red Hat 发布，若无此要求则可以省略，这是问我们自己创建的内网的YUM源。<br>“baseurl”选项所指定的URL是公司的URL访问路径。</p>
+<h6 id="作为临时解决方法之一，实际上也可以使用本地文件夹作为软件仓库。"><a href="#作为临时解决方法之一，实际上也可以使用本地文件夹作为软件仓库。" class="headerlink" title="作为临时解决方法之一，实际上也可以使用本地文件夹作为软件仓库。"></a>作为临时解决方法之一，实际上也可以使用本地文件夹作为软件仓库。</h6><p>例如，将CentOS7光盘挂载到/media/cdrom 目录下以后，可以参考以下操作来进行配置。当然这种方式仅限于在本机使用。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># vi /etc/yum.repos.d/local.repo</span></span><br><span class="line">…… </span><br><span class="line">[<span class="built_in">local</span>]</span><br><span class="line">name=CnetOS 7.3	</span><br><span class="line">baseurl=file:///media/cdrom</span><br><span class="line">enabled=1</span><br><span class="line">gpgcheck=0</span><br></pre></td></tr></table></figure>
+<h3 id="关于YUM命令"><a href="#关于YUM命令" class="headerlink" title="关于YUM命令"></a>关于YUM命令</h3><p>yum工具常见查询操作包括查询软件包列表，查询软件包的描述信息，查询指定的软件包，分别可结合子命令list，info，search 来实现。</p>
+<h4 id="YUM的配置文件"><a href="#YUM的配置文件" class="headerlink" title="YUM的配置文件"></a>YUM的配置文件</h4><p>基本设置：/etc/yum.conf<br>仓库设置：/etc/yum.repos.d/* .repo<br>日志文件：/var/log/yum.log</p>
+<h4 id="YUM缓存目录"><a href="#YUM缓存目录" class="headerlink" title="YUM缓存目录"></a>YUM缓存目录</h4><p>存放下载的软件包、仓库信息等数据<br>位于/var/cache/yum/$basearch/$releasever<br>                硬件架构👆，如x86_64  ↑os版本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># yum clean all        //清理缓存数据</span></span><br></pre></td></tr></table></figure>
+<h5 id="yum-list-————-查询软件包列表"><a href="#yum-list-————-查询软件包列表" class="headerlink" title="yum list ———— 查询软件包列表"></a>yum list ———— 查询软件包列表</h5><p>直接执行“yum list”命令可以获得系统中的软件安装情况，也可以查询软件仓库中可用的软件包列表，其中子命令list表示列表查看。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@ns2 ~]<span class="comment"># yum list |wc -l        //统计有多少行</span></span><br><span class="line">10687</span><br><span class="line">[root@ns2 ~]<span class="comment"># yum list installed | wc -l     //统计 系统已安装的软件包</span></span><br><span class="line">381</span><br><span class="line">[root@ns2 ~]<span class="comment"># yum list available | wc -l     //统计 软件仓库中可用（尚未安装）的软件包</span></span><br><span class="line">10272</span><br><span class="line">[root@ns2 ~]<span class="comment"># yum list updates | wc -l       //统计 只列出可以升级的版本的软件包</span></span><br><span class="line">197</span><br></pre></td></tr></table></figure>
+<h5 id="yum-info-————-查询软件包的描述信息"><a href="#yum-info-————-查询软件包的描述信息" class="headerlink" title="yum info ———— 查询软件包的描述信息"></a>yum info ———— 查询软件包的描述信息</h5><p>当需要查看某个软件包的描述信息时，可以执行“yum info 软件包名”，其中子命令info表示获取信息。<br>例如执行以下操作可以查看软件包 httpd 的信息。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># yum info httpd</span></span><br><span class="line">已加载插件：fastestmirror, langpacks</span><br><span class="line">Loading mirror speeds from cached hostfile</span><br><span class="line">可安装的软件包</span><br><span class="line">名称    ：httpd</span><br><span class="line">架构    ：x86_64</span><br><span class="line">版本    ：2.4.6</span><br><span class="line">发布    ：80.el7.centos</span><br><span class="line">大小    ：2.7 M</span><br><span class="line">源    ：my</span><br><span class="line">简介    ： Apache HTTP Server</span><br><span class="line">网址    ：http://httpd.apache.org/</span><br><span class="line">协议    ： ASL 2.0</span><br><span class="line">描述    ： The Apache HTTP Server is a powerful, efficient, and extensible</span><br><span class="line">         : web server.</span><br></pre></td></tr></table></figure>
+<h5 id="yum-search-————-查询指定的软件包"><a href="#yum-search-————-查询指定的软件包" class="headerlink" title="yum search ———— 查询指定的软件包"></a>yum search ———— 查询指定的软件包</h5><p>当需要根据某个关键词来查找相关的软件包时，可以执行“yum search 关键词”，默认仅根据软件包名称和描述信息进行搜索；<br>若执行“yum search all 关键词”，可以扩大搜索范围。<br>例如执行以下操作将搜索软件仓库并列出于“httpd”相关的软件包。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># yum search all httpd</span></span><br><span class="line">已加载插件：fastestmirror, langpacks</span><br><span class="line">Loading mirror speeds from cached hostfile</span><br><span class="line">========================================================================= 匹配：httpd =========================================================================</span><br><span class="line">httpd-devel.x86_64 : Development interfaces <span class="keyword">for</span> the Apache HTTP server</span><br><span class="line">httpd-manual.noarch : Documentation <span class="keyword">for</span> the Apache HTTP server</span><br><span class="line">httpd-tools.x86_64 : Tools <span class="keyword">for</span> use with the Apache HTTP Server</span><br><span class="line">libmicrohttpd.x86_64 : Lightweight library <span class="keyword">for</span> embedding a webserver <span class="keyword">in</span> applications</span><br><span class="line">httpd.x86_64 : Apache HTTP Server</span><br><span class="line">mod_dav_svn.x86_64 : Apache httpd module <span class="keyword">for</span> Subversion server</span><br><span class="line">mod_fcgid.x86_64 : FastCGI interface module <span class="keyword">for</span> Apache 2</span><br><span class="line">mod_lookup_identity.x86_64 : Apache module to retrieve additional information about the authenticated user</span><br><span class="line">mod_session.x86_64 : Session interface <span class="keyword">for</span> the Apache HTTP Server</span><br><span class="line">mod_ssl.x86_64 : SSL/TLS module <span class="keyword">for</span> the Apache HTTP Server</span><br></pre></td></tr></table></figure>
+<h3 id="查询软件包组"><a href="#查询软件包组" class="headerlink" title="查询软件包组"></a>查询软件包组</h3><p>yum grouplist [包组名]…     //查询软件包组列表<br>yum groupinfo &lt;包组名&gt;…     //查询软件包组的描述信息</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># yum grouplist</span></span><br><span class="line">已加载插件：fastestmirror, langpacks</span><br><span class="line">没有安装组信息文件</span><br><span class="line">Maybe run: yum groups mark convert (see man yum)</span><br><span class="line">Loading mirror speeds from cached hostfile</span><br><span class="line">可用的环境分组：</span><br><span class="line">   最小安装</span><br><span class="line">   基础设施服务器</span><br><span class="line">   计算节点</span><br><span class="line">   文件及打印服务器</span><br><span class="line">   基本网页服务器</span><br><span class="line">   虚拟化主机</span><br><span class="line">   带 GUI 的服务器</span><br><span class="line">   GNOME 桌面</span><br><span class="line">   KDE Plasma Workspaces</span><br><span class="line">   开发及生成工作站</span><br><span class="line">可用组：</span><br><span class="line">   传统 UNIX 兼容性</span><br><span class="line">   兼容性程序库</span><br><span class="line">   图形管理工具</span><br><span class="line">   安全性工具</span><br><span class="line">   开发工具</span><br><span class="line">   控制台互联网工具</span><br><span class="line">   智能卡支持</span><br><span class="line">   科学记数法支持</span><br><span class="line">   系统管理</span><br><span class="line">   系统管理工具</span><br><span class="line">完成</span><br><span class="line">[root@ns1 ~]<span class="comment"># yum grouplist 最小安装</span></span><br><span class="line">已加载插件：fastestmirror, langpacks</span><br><span class="line">没有安装组信息文件</span><br><span class="line">Maybe run: yum groups mark convert (see man yum)</span><br><span class="line">Loading mirror speeds from cached hostfile</span><br><span class="line">可用的环境分组：</span><br><span class="line">   最小安装</span><br><span class="line">完成</span><br><span class="line">[root@ns1 ~]<span class="comment"># yum groupinfo 最小安装</span></span><br><span class="line">已加载插件：fastestmirror, langpacks</span><br><span class="line">没有安装组信息文件</span><br><span class="line">Maybe run: yum groups mark convert (see man yum)</span><br><span class="line">Loading mirror speeds from cached hostfile</span><br><span class="line"></span><br><span class="line">环境分组：最小安装</span><br><span class="line">环境 ID：minimal</span><br><span class="line"> 描述：基本功能。</span><br><span class="line">必备组：</span><br><span class="line">   +core</span><br><span class="line">可选组：</span><br><span class="line">   +debugging</span><br></pre></td></tr></table></figure>
+<h4 id="安装软件"><a href="#安装软件" class="headerlink" title="安装软件"></a>安装软件</h4><p>yum install [软件命令]     //可使用“-y”参数，自动确认<br>yum install &lt;包组名&gt;      //-y ，自动确认。<br>####升级软件<br>yum update<br>yum groupupdate</p>
+<h4 id="卸载软件"><a href="#卸载软件" class="headerlink" title="卸载软件"></a>卸载软件</h4><p>yum remove &lt;软件名&gt;…<br>yum groupremove &lt;包组名&gt;…</p>
+<p>##课后作业<br>1.将CentOS7的ISO镜像文件挂载到/media/loop 目录下，并配置为本机的YUM仓库。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># mkdir -p media/loop.repo</span></span><br><span class="line">[root@ns1 media]<span class="comment"># mount /dev/sr0 /root/media/loop/</span></span><br><span class="line">mount: /dev/sr0 写保护，将以只读方式挂载</span><br><span class="line">[root@ns1 ~]<span class="comment"># touch /etc/yum.repos.d/loop</span></span><br><span class="line">[loop]</span><br><span class="line">name=my repodata loop</span><br><span class="line">baseurl=file:///media/loop</span><br><span class="line">enabled=1</span><br><span class="line">gpgcheck=0</span><br><span class="line"></span><br><span class="line">:wq</span><br><span class="line">[root@ns1 ~]<span class="comment"># yum clean all</span></span><br><span class="line">已加载插件：fastestmirror, langpacks</span><br><span class="line">正在清理软件源： loop</span><br><span class="line">Cleaning up everything</span><br><span class="line">Maybe you want: rm -rf /var/cache/yum, to also free up space taken by orphaned data from disabled or removed repos</span><br><span class="line">Cleaning up list of fastest mirrors</span><br><span class="line">[root@ns1 ~]<span class="comment"># yum repolist </span></span><br><span class="line">已加载插件：fastestmirror, langpacks</span><br><span class="line">Determining fastest mirrors</span><br><span class="line">loop                                                                                                                                    | 3.6 kB  00:00:00     </span><br><span class="line">(1/2): loop/group_gz                                                                                                                    | 166 kB  00:00:00     </span><br><span class="line">(2/2): loop/primary_db                                                                                                                  | 3.1 MB  00:00:00     </span><br><span class="line">源标识                                                                  源名称                                                                            状态</span><br><span class="line">loop                                                                    my repodata loop                                                                  3,971</span><br><span class="line">repolist: 3,971</span><br></pre></td></tr></table></figure>
+<p>2.查看/var/cache/yum 目录下的数据，然后执行“yum clean all”命令，再次查看目录“/var/cache/yum”，观察前后变化。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># cd /var/cache/yum/</span></span><br><span class="line">[root@ns1 yum]<span class="comment"># ls</span></span><br><span class="line">x86_64</span><br><span class="line">[root@ns1 yum]<span class="comment"># yum clean all</span></span><br><span class="line">已加载插件：fastestmirror, langpacks</span><br><span class="line">正在清理软件源： loop</span><br><span class="line">Cleaning up everything</span><br><span class="line">Maybe you want: rm -rf /var/cache/yum, to also free up space taken by orphaned data from disabled or removed repos</span><br><span class="line">Cleaning up list of fastest mirrors</span><br><span class="line">[root@ns1 yum]<span class="comment"># ls</span></span><br><span class="line">x86_64</span><br></pre></td></tr></table></figure>
+<p>3.构建NFS共享服务，将本机的/home/ 目录发布给其他主机使用。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># yum -y install nfs-utils rpcbind</span></span><br><span class="line">[root@ns1 ~]<span class="comment"># systemctl start nfs</span></span><br><span class="line">[root@ns1 ~]<span class="comment"># systemctl start rpcbind</span></span><br><span class="line">[root@ns1 ~]<span class="comment"># vim /etc/exports</span></span><br><span class="line">/home/  192.168.160.5(rw,sync,no_root_squash)</span><br><span class="line"></span><br><span class="line">:wq</span><br><span class="line">[root@ns2 ~]<span class="comment"># showmount -e 192.168.160.7     //切换160.5 查看NFS服务端共享了那些目录。</span></span><br><span class="line">Export list <span class="keyword">for</span> 192.168.160.7:</span><br><span class="line">/home 192.168.160.5</span><br></pre></td></tr></table></figure>
+
+    
+
+    
+
+    
+
+  </div>
+  <div class="article-info article-info-index">
+    
+    
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">yum</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+    
+
+    
+
+    
+    <div class="clearfix"></div>
+  </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-远程访问及控制" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -897,129 +1305,10 @@
 
 
   
-    <article id="post-linux网络设置" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
   
-  
-    <h1 itemprop="name">
-	
-	  <a class="article-title" href="/2020/06/16/linux%E7%BD%91%E7%BB%9C%E8%AE%BE%E7%BD%AE/" target="_blank">linux网络设置</a>
-  
-    </h1>
-  
-
-
-  
-  
-<a href="/2020/06/16/linux%E7%BD%91%E7%BB%9C%E8%AE%BE%E7%BD%AE/" class="archive-article-date">
-        <time datetime="2020-06-16T14:07:56.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-16</time>
-</a>
-
-  
-  
-    
-
-  
-  </header>
-  
-  <div class="article-entry" itemprop="articleBody">
-    
-    <h2 id="查看网络设置"><a href="#查看网络设置" class="headerlink" title="查看网络设置"></a>查看网络设置</h2><h3 id="查看所有活动网络接口信息"><a href="#查看所有活动网络接口信息" class="headerlink" title="查看所有活动网络接口信息"></a>查看所有活动网络接口信息</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 执行 "ifconfig" 命令</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="查看指定网络接口信息"><a href="#查看指定网络接口信息" class="headerlink" title="查看指定网络接口信息"></a>查看指定网络接口信息</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="string">"ifconfig"</span> 网络接口名</span><br></pre></td></tr></table></figure>
-
-<h3 id="设置网络接口的-ip地址，子网掩码"><a href="#设置网络接口的-ip地址，子网掩码" class="headerlink" title="设置网络接口的 ip地址，子网掩码"></a>设置网络接口的 ip地址，子网掩码</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ifconfig 接口名 ip地址 [netwask 子网掩码]</span></span><br></pre></td></tr></table></figure>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ifconfig 网络接口 ip地址[/掩码长度]</span></span><br></pre></td></tr></table></figure>
-<h3 id="激活或者重新激活网卡"><a href="#激活或者重新激活网卡" class="headerlink" title="激活或者重新激活网卡"></a>激活或者重新激活网卡</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ifconfig 网络接口 up</span></span><br></pre></td></tr></table></figure>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ifconfig 网络接口 down</span></span><br></pre></td></tr></table></figure>
-<h3 id="设置虚拟网络地址"><a href="#设置虚拟网络地址" class="headerlink" title="设置虚拟网络地址"></a>设置虚拟网络地址</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ifconfig 接口名:序号 IP地址</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="ip-ethtool"><a href="#ip-ethtool" class="headerlink" title="ip/ethtool"></a>ip/ethtool</h3><p>查看网络接口的数据链路层，网络层信息和网络接口速率，模式等信息。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ip link         // 查看网络接口的数据链路层信息</span></span><br></pre></td></tr></table></figure>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ip address      //查看网络接口的网络层信息</span></span><br></pre></td></tr></table></figure>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ethtool eth0     //查看指定网络接口的速率，模式等信息</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="查看路由表条目"><a href="#查看路由表条目" class="headerlink" title="查看路由表条目"></a>查看路由表条目</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># route [-n]</span></span><br></pre></td></tr></table></figure>
-<h3 id="添加到指定网段的路由记录"><a href="#添加到指定网段的路由记录" class="headerlink" title="添加到指定网段的路由记录"></a>添加到指定网段的路由记录</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># route add -net 网络地址 gw IP地址</span></span><br></pre></td></tr></table></figure>
-<h3 id="删除路由表中的默认路由记录"><a href="#删除路由表中的默认路由记录" class="headerlink" title="删除路由表中的默认路由记录"></a>删除路由表中的默认路由记录</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># route del -net 网段地址</span></span><br></pre></td></tr></table></figure>
-<h3 id="删除路由表中的默认网关记录"><a href="#删除路由表中的默认网关记录" class="headerlink" title="删除路由表中的默认网关记录"></a>删除路由表中的默认网关记录</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># route del default gw ip地址</span></span><br></pre></td></tr></table></figure>
-<h3 id="向路由表中添加默认网关记录"><a href="#向路由表中添加默认网关记录" class="headerlink" title="向路由表中添加默认网关记录"></a>向路由表中添加默认网关记录</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># route add default gw ip地址</span></span><br></pre></td></tr></table></figure>
-<h3 id="netstst-命令"><a href="#netstst-命令" class="headerlink" title="netstst 命令"></a>netstst 命令</h3><p>查看系统的网络连接状态，路由表，接口统计等信息。</p>
-<h3 id="常用选项"><a href="#常用选项" class="headerlink" title="常用选项"></a>常用选项</h3><pre><code>   -a ：显示当前主机中所有活动的网络连接信息。
-   -n ：以数字的形式显示相关的主机地址，端口等信息。
-   -r ：显示路由表信息。
-   -l ：显示处于监听状态的网络连接及端口信息。
-   -t ：查看TCP协议相关的信息。
-   -u ：显示UDP协议相关的信息。
-   -p ：显示与网络连接相关联的进程号，进程名称信息（需要root权限）。
--anpt ：以数字形式显示当前系统中所有的TCP连接信息，同时显示对应的进程信息。
-结合命令管道使用“grep” 命令，还可以在结果中过滤出所需要的特定记录。</code></pre><h3 id="测试网络连接-————-ping-命令-（ctrl-c-终止测试）"><a href="#测试网络连接-————-ping-命令-（ctrl-c-终止测试）" class="headerlink" title="测试网络连接 ———— ping 命令   （ctrl + c 终止测试）"></a>测试网络连接 ———— ping 命令   （ctrl + c 终止测试）</h3><h3 id="测试从当前主机到目的主机之间经过的网络节点-————-traceroute-命令"><a href="#测试从当前主机到目的主机之间经过的网络节点-————-traceroute-命令" class="headerlink" title="测试从当前主机到目的主机之间经过的网络节点 ———— traceroute 命令"></a>测试从当前主机到目的主机之间经过的网络节点 ———— traceroute 命令</h3><h3 id="测试DNS域名解析-————-nslookup-命令。"><a href="#测试DNS域名解析-————-nslookup-命令。" class="headerlink" title="测试DNS域名解析 ———— nslookup 命令。"></a>测试DNS域名解析 ———— nslookup 命令。</h3><h3 id="临时配置"><a href="#临时配置" class="headerlink" title="临时配置"></a>临时配置</h3><pre><code>使用命令调整网络参数
-简单，快速，可直接修改运行中的网络参数
-一般只适合在调试网络的过程中使用。
-系统重启以后，所做的修改将会失效。</code></pre><h3 id="固定配置"><a href="#固定配置" class="headerlink" title="固定配置"></a>固定配置</h3><pre><code>通过配置文件修改网络参数。
-修改各项网络参数的配置文件
-适合对服务器设置固定参数时使用。
-需要重载网络服务或重启以后才会生效。</code></pre><h3 id="网络接口配置文件：-etc-sysconfig-network-scripts-目录下"><a href="#网络接口配置文件：-etc-sysconfig-network-scripts-目录下" class="headerlink" title="网络接口配置文件：/etc/sysconfig/network-scripts/目录下"></a>网络接口配置文件：/etc/sysconfig/network-scripts/目录下</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment">#vim /etc/sysconfig/network-scripts/ifcfg-ens33    //第1块以太网卡的配置文件</span></span><br><span class="line">TYPE=Ethernet</span><br><span class="line">BOOTPROTO=static</span><br><span class="line">DEVICE=ens33</span><br><span class="line">ONBOOT=yes</span><br><span class="line">IPADDR=192.168.4.11</span><br><span class="line">NETMASK=255.255.255.0</span><br><span class="line">GATEWAY=192.168.4.1</span><br></pre></td></tr></table></figure>
-<h3 id="启动，禁用网络接口配置：重启network-网络服务"><a href="#启动，禁用网络接口配置：重启network-网络服务" class="headerlink" title="启动，禁用网络接口配置：重启network 网络服务"></a>启动，禁用网络接口配置：重启network 网络服务</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart network</span><br></pre></td></tr></table></figure>
-<h3 id="禁用，启动网络接口"><a href="#禁用，启动网络接口" class="headerlink" title="禁用，启动网络接口"></a>禁用，启动网络接口</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ifdown ens33               ifup ens33</span><br></pre></td></tr></table></figure>
-<h3 id="主机名称配置文件-：-etc-sysconfig-network-文件"><a href="#主机名称配置文件-：-etc-sysconfig-network-文件" class="headerlink" title="主机名称配置文件 ：/etc/sysconfig/network 文件"></a>主机名称配置文件 ：/etc/sysconfig/network 文件</h3><p>保存全局网络配置，只要包括主机名信息。</p>
-<h3 id="域名解析配置文件：-etc-resolv-conf-文件"><a href="#域名解析配置文件：-etc-resolv-conf-文件" class="headerlink" title="域名解析配置文件：/etc/resolv.conf 文件"></a>域名解析配置文件：/etc/resolv.conf 文件</h3><p>保存本机需要使用的DNS服务器的ip地址</p>
-<h3 id="本地主机映射文件：-etc-hosts-文件"><a href="#本地主机映射文件：-etc-hosts-文件" class="headerlink" title="本地主机映射文件： /etc/hosts 文件"></a>本地主机映射文件： /etc/hosts 文件</h3><p>保存主机名与IP地址的映射记录。</p>
-<h3 id="hosts-文件和DNS服务器的比较"><a href="#hosts-文件和DNS服务器的比较" class="headerlink" title="hosts 文件和DNS服务器的比较"></a>hosts 文件和DNS服务器的比较</h3><p>  默认情况下，系统首先从hosts 文件查找解析记录。<br>  hosts 文件只对当前的主机有效。<br>  hosts 文件可减少DNS查询过程，从而加快访问速度。</p>
-
-    
-
-    
-
-    
-
-  </div>
-  <div class="article-info article-info-index">
-    
-    
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">linux</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-    
-
-    
-
-    
-    <div class="clearfix"></div>
-  </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
+    <nav id="page-nav">
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &amp;raquo;</a>
+    </nav>
   
 
 
@@ -1134,6 +1423,18 @@
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">ssh</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">nfs</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">pxe</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">yum</a>
               </li>
             
             <div class="clearfix"></div>
