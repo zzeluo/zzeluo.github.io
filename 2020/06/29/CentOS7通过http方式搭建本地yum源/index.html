@@ -10,14 +10,17 @@
   <meta name="generator" content="hexo-theme-yilia-plus">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   
-  <meta property="og:type" content="article">
+  <meta name="description" content="服务端配置：一，使用镜像包创建本地镜像1.在&#x2F;mnt下创建 cdrom目录 1[root@ns1 ~]# mkdir &#x2F;mnt&#x2F;cdrom 2.挂载镜像文件至该目录下 123456789101112[root@ns1 ~]# mount &#x2F;dev&#x2F;sr0 &#x2F;mnt&#x2F;cdrom&#x2F;mount: &#x2F;dev&#x2F;sr0 写保护，将以只读方式挂载[root@ns1 ~]# df -hT文件系统">
+<meta property="og:type" content="article">
 <meta property="og:title" content="CentOS7通过http方式搭建本地yum源">
 <meta property="og:url" content="http://yoursite.com/2020/06/29/CentOS7%E9%80%9A%E8%BF%87http%E6%96%B9%E5%BC%8F%E6%90%AD%E5%BB%BA%E6%9C%AC%E5%9C%B0yum%E6%BA%90/index.html">
 <meta property="og:site_name" content="择萝">
+<meta property="og:description" content="服务端配置：一，使用镜像包创建本地镜像1.在&#x2F;mnt下创建 cdrom目录 1[root@ns1 ~]# mkdir &#x2F;mnt&#x2F;cdrom 2.挂载镜像文件至该目录下 123456789101112[root@ns1 ~]# mount &#x2F;dev&#x2F;sr0 &#x2F;mnt&#x2F;cdrom&#x2F;mount: &#x2F;dev&#x2F;sr0 写保护，将以只读方式挂载[root@ns1 ~]# df -hT文件系统">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-06-29T06:02:13.000Z">
-<meta property="article:modified_time" content="2020-06-29T06:02:13.384Z">
+<meta property="article:modified_time" content="2020-06-29T15:36:53.577Z">
 <meta property="article:author" content="择萝">
+<meta property="article:tag" content="http &amp; yum">
 <meta name="twitter:card" content="summary">
   
   
@@ -167,7 +170,7 @@
       <!-- 百度字体平台:http://fontstore.baidu.com/static/editor/index.html -->
       <i class="icon-statistics"></i>
       <span class="post-meta-item-text"> 字数统计:</span>
-      <span class="post-count">0字</span>
+      <span class="post-count">890字</span>
     </span>
   </span>
 
@@ -176,7 +179,7 @@
     <span class="post-meta-item-icon">
       <i class="icon-book icon"></i>
       <span class="post-meta-item-text"> 阅读时长≈</span>
-      <span class="post-count">1分</span>
+      <span class="post-count">4分</span>
     </span>
   </span>
 </div>
@@ -187,7 +190,33 @@
   
   <div class="article-entry" itemprop="articleBody">
     
-    
+    <h2 id="服务端配置："><a href="#服务端配置：" class="headerlink" title="服务端配置："></a>服务端配置：</h2><h3 id="一，使用镜像包创建本地镜像"><a href="#一，使用镜像包创建本地镜像" class="headerlink" title="一，使用镜像包创建本地镜像"></a>一，使用镜像包创建本地镜像</h3><p>1.在/mnt下创建 cdrom目录</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># mkdir /mnt/cdrom</span></span><br></pre></td></tr></table></figure>
+<p>2.挂载镜像文件至该目录下</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># mount /dev/sr0 /mnt/cdrom/</span></span><br><span class="line">mount: /dev/sr0 写保护，将以只读方式挂载</span><br><span class="line">[root@ns1 ~]<span class="comment"># df -hT</span></span><br><span class="line">文件系统                类型      容量  已用  可用 已用% 挂载点</span><br><span class="line">/dev/mapper/centos-root xfs        17G  8.6G  8.5G   51% /</span><br><span class="line">devtmpfs                devtmpfs  975M     0  975M    0% /dev</span><br><span class="line">tmpfs                   tmpfs     992M     0  992M    0% /dev/shm</span><br><span class="line">tmpfs                   tmpfs     992M   11M  981M    2% /run</span><br><span class="line">tmpfs                   tmpfs     992M     0  992M    0% /sys/fs/cgroup</span><br><span class="line">/dev/sda1               xfs      1014M  157M  858M   16% /boot</span><br><span class="line">tmpfs                   tmpfs     199M   24K  199M    1% /run/user/0</span><br><span class="line">/dev/sr0                iso9660   4.2G  4.2G     0  100% /mnt/cdrom</span><br></pre></td></tr></table></figure>
+<p>3.备份/etc/yum.repos.d 下文件并编辑文件 centos-http.repo </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># vim /etc/yum.repos.d/centos-http.repo </span></span><br><span class="line"></span><br><span class="line">[development]</span><br><span class="line">name=my repodata http</span><br><span class="line">baseurl=file:///mnt/cdrom</span><br><span class="line">enabled=1</span><br><span class="line">gpgcheck=0</span><br></pre></td></tr></table></figure>
+<p>5.更改完成后执行命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># yum clean all                     //清理yum软件仓库</span></span><br><span class="line">已加载插件：fastestmirror, langpacks</span><br><span class="line">Repository development is listed more than once <span class="keyword">in</span> the configuration</span><br><span class="line">正在清理软件源： base development extras updates</span><br><span class="line">Cleaning up everything</span><br><span class="line">Maybe you want: rm -rf /var/cache/yum, to also free up space taken by orphaned data from disabled or removed repos</span><br><span class="line">Cleaning up list of fastest mirrors</span><br><span class="line">[root@ns1 ~]<span class="comment"># yum repolist                                //刷新本地容器清单列表</span></span><br><span class="line">已加载插件：fastestmirror, langpacks</span><br><span class="line">Repository development is listed more than once <span class="keyword">in</span> the configuration</span><br><span class="line">Determining fastest mirrors</span><br><span class="line"> * base: mirrors.aliyun.com</span><br><span class="line"> * extras: mirrors.aliyun.com</span><br><span class="line"> * updates: mirrors.aliyun.com</span><br><span class="line">base                                                                                                                                     | 3.6 kB  00:00:00     </span><br><span class="line">development                                                                                                                              | 3.6 kB  00:00:00     </span><br><span class="line">extras                                                                                                                                   | 2.9 kB  00:00:00     </span><br><span class="line">updates                                                                                                                                  | 2.9 kB  00:00:00     </span><br><span class="line">(1/6): development/group_gz                                                                                                              | 166 kB  00:00:00     </span><br><span class="line">(2/6): development/primary_db                                                                                                            | 3.1 MB  00:00:00     </span><br><span class="line">(3/6): base/7/x86_64/group_gz                                                                                                            | 153 kB  00:00:00     </span><br><span class="line">(4/6): extras/7/x86_64/primary_db                                                                                                        | 194 kB  00:00:00     </span><br><span class="line">(5/6): updates/7/x86_64/primary_db                                                                                                       | 2.9 MB  00:00:00     </span><br><span class="line">(6/6): base/7/x86_64/primary_db                                                                                                          | 6.1 MB  00:00:01     </span><br><span class="line">源标识                                                                      源名称                                                                        状态</span><br><span class="line">base/7/x86_64                                                               CentOS-7 - Base                                                               10,070</span><br><span class="line">development                                                                 my repodata http                                                               3,971</span><br></pre></td></tr></table></figure>
+<p>6.使用 yum安装http服务并启动 httpd</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># yum install -y httpd</span></span><br><span class="line">[root@ns1 ~]<span class="comment"># systemctl start httpd</span></span><br><span class="line">[root@ns1 ~]<span class="comment"># systemctl enable httpd</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="二，http-方式yum源的-制作"><a href="#二，http-方式yum源的-制作" class="headerlink" title="二，http 方式yum源的 制作"></a>二，http 方式yum源的 制作</h3><p>1.取消原来的本地挂载重新挂载到 http 服务路径下</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># umount /mnt/cdrom/     //取消本地挂载</span></span><br><span class="line">[root@ns1 ~]<span class="comment"># cd /var/www/html/      //切换至 http服务路径</span></span><br><span class="line">[root@ns1 html]<span class="comment"># mkdir centos       //创建挂载文件存放目录</span></span><br><span class="line">[root@ns1 html]<span class="comment"># mount /dev/sr0 /var/www/html/centos/           //挂载镜像包</span></span><br><span class="line">mount: /dev/sr0 写保护，将以只读方式挂载</span><br></pre></td></tr></table></figure>
+<p>2.重启刷新 httpd服务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># systemctl restart httpd</span></span><br></pre></td></tr></table></figure>
+<p>3.更改yum 源配置文件.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># vim /etc/yum.repos.d/centos-http.repo </span></span><br><span class="line"></span><br><span class="line">[development]</span><br><span class="line">name=my repodata http</span><br><span class="line">baseurl=http://192.168.160.7/centos</span><br><span class="line">enabled=1</span><br><span class="line">gpgcheck=0</span><br><span class="line"></span><br><span class="line">:wq</span><br></pre></td></tr></table></figure>
+<p>4.更改完成后执行命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># yum clean all</span></span><br><span class="line">[root@ns1 ~]<span class="comment"># yum repolist</span></span><br><span class="line">已加载插件：fastestmirror, langpacks</span><br><span class="line">Repository development is listed more than once <span class="keyword">in</span> the configuration</span><br><span class="line">Determining fastest mirrors</span><br><span class="line"> * base: mirrors.aliyun.com</span><br><span class="line"> * extras: mirrors.aliyun.com</span><br><span class="line"> * updates: mirrors.aliyun.com</span><br><span class="line">base                                                                                                                                     | 3.6 kB  00:00:00     </span><br><span class="line">development                                                                                                                              | 3.6 kB  00:00:00     </span><br><span class="line">extras                                                                                                                                   | 2.9 kB  00:00:00     </span><br><span class="line">updates                                                                                                                                  | 2.9 kB  00:00:00     </span><br><span class="line">(1/6): development/group_gz                                                                                                              | 166 kB  00:00:00     </span><br><span class="line">(2/6): development/primary_db                                                                                                            | 3.1 MB  00:00:00     </span><br><span class="line">(3/6): base/7/x86_64/group_gz                                                                                                            | 153 kB  00:00:00     </span><br><span class="line">(4/6): base/7/x86_64/primary_db                                                                                                          | 6.1 MB  00:00:01     </span><br><span class="line">(5/6): updates/7/x86_64/primary_db                                                                                                       | 2.9 MB  00:00:03     </span><br><span class="line">(6/6): extras/7/x86_64/primary_db                                                                                                        | 194 kB  00:00:05     </span><br><span class="line">源标识                                                                      源名称                                                                        状态</span><br><span class="line">base/7/x86_64                                                               CentOS-7 - Base                                                               10,070</span><br><span class="line">development                                                                 my repodata http                                                               3,971</span><br></pre></td></tr></table></figure>
+<p>5.本地 http 方式yum 源配置完成。<br>最后设置开机自动挂载，以防机器挂机重启，</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># vim /etc/fstab </span></span><br><span class="line"></span><br><span class="line">/dev/sr0        /var/www/html/centos</span><br><span class="line"></span><br><span class="line">:wq</span><br></pre></td></tr></table></figure>
+<h2 id="客户端配置："><a href="#客户端配置：" class="headerlink" title="客户端配置："></a>客户端配置：</h2><p>1.vi /etc/yum.repos.d/CentOS-Base.repo （其中IP为服务端IP）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[dvd]</span><br><span class="line">name=dvd</span><br><span class="line">baseurl=http://192.168.160.7/centos	</span><br><span class="line">gpgcheck=0</span><br><span class="line"><span class="comment">#gpgkey=http://10.0.4.51/Centos/RPM-GPG-KEY-CenmtOS-7	</span></span><br><span class="line">enabled=1</span><br></pre></td></tr></table></figure>
+<p>2.更改完成后执行命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum clean all</span><br><span class="line">yum makecache</span><br></pre></td></tr></table></figure>
+<p>3.刷新完成后即可在客户端通过 yum 安装软件。</p>
+
     
 
     
@@ -198,6 +227,17 @@
   <div class="article-info article-info-index">
     
     
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">http & yum</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
     
 
     
@@ -372,6 +412,10 @@
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">yum</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">http & yum</a>
               </li>
             
             <div class="clearfix"></div>

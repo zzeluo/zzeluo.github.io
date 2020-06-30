@@ -6,24 +6,17 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>部署YUN仓库及NFS共享服务 | 择萝</title>
+  <title>Tag: http &amp; yum | 择萝</title>
   <meta name="generator" content="hexo-theme-yilia-plus">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   
-  <meta name="description" content="YUM, Yellow dog Updater Modified基于RPM包构建的软件更新机制。可以自动解决依赖关系所有软件包由集中的YUM软件仓库提供。 软件仓库的提供方式FTP服务：ftp:&#x2F;&#x2F;……HTTP服务：http:&#x2F;&#x2F;……本地目录：file:&#x2F;&#x2F;…… RPM软件包的来源CentOS发布的RPM包集合第三方组织发布的RPM包集合用户自定义的RPM包集合 构建CentOS 7 软件仓库RP">
-<meta property="og:type" content="article">
-<meta property="og:title" content="部署YUN仓库及NFS共享服务">
-<meta property="og:url" content="http://yoursite.com/2020/06/28/%E9%83%A8%E7%BD%B2YUN%E4%BB%93%E5%BA%93/index.html">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="择萝">
+<meta property="og:url" content="http://yoursite.com/tags/http-yum/index.html">
 <meta property="og:site_name" content="择萝">
-<meta property="og:description" content="YUM, Yellow dog Updater Modified基于RPM包构建的软件更新机制。可以自动解决依赖关系所有软件包由集中的YUM软件仓库提供。 软件仓库的提供方式FTP服务：ftp:&#x2F;&#x2F;……HTTP服务：http:&#x2F;&#x2F;……本地目录：file:&#x2F;&#x2F;…… RPM软件包的来源CentOS发布的RPM包集合第三方组织发布的RPM包集合用户自定义的RPM包集合 构建CentOS 7 软件仓库RP">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://yoursite.com/2020/06/28/%E9%83%A8%E7%BD%B2YUN%E4%BB%93%E5%BA%93/img/6.28.png">
-<meta property="article:published_time" content="2020-06-28T06:31:33.000Z">
-<meta property="article:modified_time" content="2020-06-29T14:43:20.551Z">
 <meta property="article:author" content="择萝">
-<meta property="article:tag" content="yum">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://yoursite.com/2020/06/28/%E9%83%A8%E7%BD%B2YUN%E4%BB%93%E5%BA%93/img/6.28.png">
   
   
     <link rel="icon" href="/favicon.ico">
@@ -144,170 +137,65 @@
               class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-部署YUN仓库" class="article article-type-post " itemscope itemprop="blogPost">
-  <div class="article-inner">
+            
+  
+  
     
-      <header class="article-header">
+    
+      
+      
+      <section class="archives-wrap">
+        <div class="archive-year-wrap">
+          <a href="/archives/2020" class="archive-year">2020</a>
+        </div>
+        <div class="archives">
+    
+    <article class="archive-article archive-type-post">
+  <div class="archive-article-inner">
+    <header class="archive-article-header">
+      	<div class="article-meta">
+	      	
+<a href="/2020/06/29/CentOS7%E9%80%9A%E8%BF%87http%E6%96%B9%E5%BC%8F%E6%90%AD%E5%BB%BA%E6%9C%AC%E5%9C%B0yum%E6%BA%90/" class="archive-article-date">
+        <time datetime="2020-06-29T06:02:13.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-29</time>
+</a>
+
+        </div>
+    	 
   
+    <h1 itemprop="name">
+	
+	  <a class="archive-article-title" href="/2020/06/29/CentOS7%E9%80%9A%E8%BF%87http%E6%96%B9%E5%BC%8F%E6%90%AD%E5%BB%BA%E6%9C%AC%E5%9C%B0yum%E6%BA%90/" target="_blank">CentOS7通过http方式搭建本地yum源</a>
   
-    <h1 class="article-title" itemprop="name">
-      部署YUN仓库及NFS共享服务
     </h1>
   
 
 
-  
-  
-<a href="/2020/06/28/%E9%83%A8%E7%BD%B2YUN%E4%BB%93%E5%BA%93/" class="archive-article-date">
-        <time datetime="2020-06-28T06:31:33.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-28</time>
-</a>
-
-  
-  
-    
-<div style="margin-top:10px;">
-  <span class="post-time">
-    <span class="post-meta-item-icon">
-      <!-- fonts.scss -->
-      <!-- 百度字体平台:http://fontstore.baidu.com/static/editor/index.html -->
-      <i class="icon-statistics"></i>
-      <span class="post-meta-item-text"> 字数统计:</span>
-      <span class="post-count">2.6k字</span>
-    </span>
-  </span>
-
-  <span class="post-time">
-    &nbsp; | &nbsp;
-    <span class="post-meta-item-icon">
-      <i class="icon-book icon"></i>
-      <span class="post-meta-item-text"> 阅读时长≈</span>
-      <span class="post-count">12分</span>
-    </span>
-  </span>
-</div>
-
-
-  
-  </header>
-  
-  <div class="article-entry" itemprop="articleBody">
-    
-    <h2 id="YUM-Yellow-dog-Updater-Modified"><a href="#YUM-Yellow-dog-Updater-Modified" class="headerlink" title="YUM, Yellow dog Updater Modified"></a>YUM, Yellow dog Updater Modified</h2><p>基于RPM包构建的软件更新机制。<br>可以自动解决依赖关系<br>所有软件包由集中的YUM软件仓库提供。<br><img src="img/6.28.png" alt="YUM概述"></p>
-<h4 id="软件仓库的提供方式"><a href="#软件仓库的提供方式" class="headerlink" title="软件仓库的提供方式"></a>软件仓库的提供方式</h4><p>FTP服务：ftp://……<br>HTTP服务：http://……<br>本地目录：file://……</p>
-<h4 id="RPM软件包的来源"><a href="#RPM软件包的来源" class="headerlink" title="RPM软件包的来源"></a>RPM软件包的来源</h4><p>CentOS发布的RPM包集合<br>第三方组织发布的RPM包集合<br>用户自定义的RPM包集合</p>
-<h3 id="构建CentOS-7-软件仓库"><a href="#构建CentOS-7-软件仓库" class="headerlink" title="构建CentOS 7 软件仓库"></a>构建CentOS 7 软件仓库</h3><p>RPM包来自CentOS 7 DVD光盘<br>通过FTP,HTTP或本地目录提供给客户。<br>####1）准备软件仓库目录</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># mkdir cdrom</span></span><br><span class="line">[root@ns1 ~]<span class="comment"># mount /dev/sr0 cdrom</span></span><br><span class="line">[root@ns1 cdrom]<span class="comment"># df -hT</span></span><br><span class="line">文件系统                类型      容量  已用  可用 已用% 挂载点</span><br><span class="line">/dev/mapper/centos-root xfs        17G  5.4G   12G   32% /</span><br><span class="line">devtmpfs                devtmpfs  975M     0  975M    0% /dev</span><br><span class="line">tmpfs                   tmpfs     992M     0  992M    0% /dev/shm</span><br><span class="line">tmpfs                   tmpfs     992M   11M  981M    2% /run</span><br><span class="line">tmpfs                   tmpfs     992M     0  992M    0% /sys/fs/cgroup</span><br><span class="line">/dev/sr0                iso9660   4.2G  4.2G     0  100% /root/cdrom</span><br><span class="line">[root@localhost ~]<span class="comment"># mkdir -p /var/ftp/centos7          //递归的形式创建文件即使没有目录也会一起创建。</span></span><br><span class="line">[root@ns1 ~]<span class="comment"># cp -rf cdrom/* /var/ftp/centos7/         //递归的形式强制复制文件</span></span><br></pre></td></tr></table></figure>
-<p>####安装并启动vsftpd 服务</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># rpm -ivh /media/cdrom/Packages/vsftpd-3.0.2-21.el7.x86_64.rpm</span></span><br><span class="line">[root@localhost ~]<span class="comment"># systemctl start vsftpd</span></span><br><span class="line">[root@localhost ~]<span class="comment"># systemctl enable vsftpd</span></span><br><span class="line">[root@ns1 ~]<span class="comment"># systemctl status vsftpd          //查看进程运行状态</span></span><br><span class="line">● vsftpd.service - Vsftpd ftp daemon</span><br><span class="line">   Loaded: loaded (/usr/lib/systemd/system/vsftpd.service; enabled; vendor preset: disabled)</span><br><span class="line">   Active: active (running) since 一 2020-06-29 17:06:46 CST; 2s ago</span><br><span class="line">  Process: 3049 ExecStart=/usr/sbin/vsftpd /etc/vsftpd/vsftpd.conf (code=exited, status=0/SUCCESS)</span><br><span class="line"> Main PID: 3050 (vsftpd)</span><br><span class="line">    Tasks: 1</span><br><span class="line">   CGroup: /system.slice/vsftpd.service</span><br><span class="line">           └─3050 /usr/sbin/vsftpd /etc/vsftpd/vsftpd.conf</span><br></pre></td></tr></table></figure>
-<p>####验证</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">[root@ns2 cdrom]<span class="comment"># ftp</span></span><br><span class="line">-bash: ftp: 未找到命令</span><br><span class="line">[root@ns2 cdrom]<span class="comment"># yum provides ftp         // 查找提供指定内容的软件包</span></span><br><span class="line">已加载插件：fastestmirror</span><br><span class="line">Loading mirror speeds from cached hostfile</span><br><span class="line"> * base: mirrors.nju.edu.cn</span><br><span class="line"> * extras: mirrors.cqu.edu.cn</span><br><span class="line"> * updates: mirrors.cqu.edu.cn</span><br><span class="line">base                                                                                                                                    | 3.6 kB  00:00:00     </span><br><span class="line">extras                                                                                                                                  | 2.9 kB  00:00:00     </span><br><span class="line">updates                                                                                                                                 | 2.9 kB  00:00:00     </span><br><span class="line">updates/7/x86_64/primary_db                                                                                                             | 2.9 MB  00:00:05     </span><br><span class="line">ftp-0.17-67.el7.x86_64 : The standard UNIX FTP (File Transfer Protocol) client</span><br><span class="line">源    ：base</span><br><span class="line">[root@ns2 cdrom]<span class="comment"># yum install -y ftp</span></span><br><span class="line">[root@ns2 ~]<span class="comment"># ftp 192.168.160.7</span></span><br><span class="line">Connected to 192.168.160.7 (192.168.160.7).</span><br><span class="line">220 (vsFTPd 3.0.2)</span><br><span class="line">Name (192.168.160.7:root): ftp</span><br><span class="line">331 Please specify the password.</span><br><span class="line">Password:</span><br><span class="line">230 Login successful.</span><br><span class="line">Remote system <span class="built_in">type</span> is UNIX.</span><br><span class="line">Using binary mode to transfer files.</span><br><span class="line">ftp&gt; ls</span><br><span class="line">227 Entering Passive Mode (192,168,160,7,43,224).</span><br><span class="line">150 Here comes the directory listing.</span><br><span class="line">drwxr-xr-x    8 0        0             220 Jun 29 08:55 centos7</span><br><span class="line">drwxr-xr-x    2 14       0               6 Apr 01 04:55 pub</span><br><span class="line">drwxrwxrwx    3 1001     0              26 Jun 23 14:31 upload</span><br><span class="line">226 Directory send OK.</span><br><span class="line">ftp&gt; <span class="built_in">cd</span> centos7</span><br><span class="line">250 Directory successfully changed.</span><br><span class="line">ftp&gt; ls</span><br><span class="line">227 Entering Passive Mode (192,168,160,7,40,245).</span><br><span class="line">150 Here comes the directory listing.</span><br><span class="line">-rw-r--r--    1 0        0              14 Jun 29 08:54 CentOS_BuildTag</span><br><span class="line">drwxr-xr-x    3 0        0              35 Jun 29 08:54 EFI</span><br><span class="line">-rw-r--r--    1 0        0             227 Jun 29 08:54 EULA</span><br><span class="line">-rw-r--r--    1 0        0           18009 Jun 29 08:54 GPL</span><br><span class="line">drwxr-xr-x    2 0        0              43 Jun 29 08:54 LiveOS</span><br><span class="line">drwxr-xr-x    2 0        0          221184 Jun 29 08:55 Packages</span><br><span class="line">-rw-r--r--    1 0        0            1690 Jun 29 08:55 RPM-GPG-KEY-CentOS-7</span><br><span class="line">-rw-r--r--    1 0        0            1690 Jun 29 08:55 RPM-GPG-KEY-CentOS-Testing-7</span><br><span class="line">-r--r--r--    1 0        0            2883 Jun 29 08:55 TRANS.TBL</span><br><span class="line">drwxr-xr-x    3 0        0              57 Jun 29 08:54 images</span><br><span class="line">drwxr-xr-x    2 0        0             198 Jun 29 08:54 isolinux</span><br><span class="line">drwxr-xr-x    2 0        0            4096 Jun 29 08:55 repodata</span><br><span class="line">226 Directory send OK.</span><br><span class="line">ftp&gt; quit</span><br></pre></td></tr></table></figure>
-<p>####在软件仓库中加入非官方RPM包组<br>对于用户搜集的非CentOS7 光盘自带的更多其他软件包（必须包括存在依赖关系的所有安装文件），除了应准备相应的目录之外，还需要手动创建仓库（repodata）数据文件，这就要用到createrepo工具。<br>包括存在依赖关系的所有RPM包。<br>使用createrepo 工具建立仓库数据文件。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># mkdir /var/ftp/other</span></span><br><span class="line">[root@localhost ~]<span class="comment"># cd /var/ftp/other</span></span><br><span class="line">[root@localhost other]<span class="comment"># createrepo -g /media/cdrom/repodata/repomd.xml ./</span></span><br></pre></td></tr></table></figure>
-<p>###为客户机指定YUM仓库位置<br>配置文件：/etc/yum.repos.d/* .repo</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># vim /etc/yum.repos.d/centos-my.repo </span></span><br><span class="line">[my]                                      //仓库名字</span><br><span class="line">name=my repodata                          //仓库说明</span><br><span class="line">baseurl=ftp://192.168.160.7/centos7       //URL访问路径</span><br><span class="line">enabled=1                                  //启用此软件仓库</span><br><span class="line">gpgcheck=0                               //0不验证软件包的签名</span><br><span class="line"></span><br><span class="line">：wq</span><br><span class="line">[root@ns1 ~]<span class="comment"># yum clean all             //清理缓存数据</span></span><br><span class="line">[root@ns1 ~]<span class="comment"># yum repolist             //显示已配置的源</span></span><br><span class="line">已加载插件：fastestmirror, langpacks</span><br><span class="line">Loading mirror speeds from cached hostfile</span><br><span class="line">源标识                                                                    源名称                                                                          状态</span><br><span class="line">my                                                                        my repodata                                                                     3,971</span><br><span class="line">repolist: 3,971</span><br></pre></td></tr></table></figure>
-<p>上述操作中，centos-my.repo 需要手动创建，/etc/yum.repos.d 目录下若有其他为用的“* .repo”文件建议将其删除。配置“enabled=1” 为默认项，可以省略；“gpgcheck”和“gpgkey”两行配置用来检查软包是否为Red Hat 发布，若无此要求则可以省略，这是问我们自己创建的内网的YUM源。<br>“baseurl”选项所指定的URL是公司的URL访问路径。</p>
-<h4 id="作为临时解决方法之一，实际上也可以使用本地文件夹作为软件仓库。"><a href="#作为临时解决方法之一，实际上也可以使用本地文件夹作为软件仓库。" class="headerlink" title="作为临时解决方法之一，实际上也可以使用本地文件夹作为软件仓库。"></a>作为临时解决方法之一，实际上也可以使用本地文件夹作为软件仓库。</h4><p>例如，将CentOS7光盘挂载到/media/cdrom 目录下以后，可以参考以下操作来进行配置。当然这种方式仅限于在本机使用。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># vi /etc/yum.repos.d/local.repo</span></span><br><span class="line">…… </span><br><span class="line">[<span class="built_in">local</span>]</span><br><span class="line">name=CnetOS 7.3	</span><br><span class="line">baseurl=file:///media/cdrom</span><br><span class="line">enabled=1</span><br><span class="line">gpgcheck=0</span><br></pre></td></tr></table></figure>
-<h3 id="关于YUM命令"><a href="#关于YUM命令" class="headerlink" title="关于YUM命令"></a>关于YUM命令</h3><p>yum工具常见查询操作包括查询软件包列表，查询软件包的描述信息，查询指定的软件包，分别可结合子命令list，info，search 来实现。</p>
-<h4 id="YUM的配置文件"><a href="#YUM的配置文件" class="headerlink" title="YUM的配置文件"></a>YUM的配置文件</h4><p>基本设置：/etc/yum.conf<br>仓库设置：/etc/yum.repos.d/* .repo<br>日志文件：/var/log/yum.log</p>
-<h4 id="YUM缓存目录"><a href="#YUM缓存目录" class="headerlink" title="YUM缓存目录"></a>YUM缓存目录</h4><p>存放下载的软件包、仓库信息等数据<br>位于/var/cache/yum/$basearch/$releasever<br>                硬件架构👆，如x86_64  ↑os版本</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># yum clean all        //清理缓存数据</span></span><br></pre></td></tr></table></figure>
-<h4 id="yum-list-————-查询软件包列表"><a href="#yum-list-————-查询软件包列表" class="headerlink" title="yum list ———— 查询软件包列表"></a>yum list ———— 查询软件包列表</h4><p>直接执行“yum list”命令可以获得系统中的软件安装情况，也可以查询软件仓库中可用的软件包列表，其中子命令list表示列表查看。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@ns2 ~]<span class="comment"># yum list |wc -l        //统计有多少行</span></span><br><span class="line">10687</span><br><span class="line">[root@ns2 ~]<span class="comment"># yum list installed | wc -l     //统计 系统已安装的软件包</span></span><br><span class="line">381</span><br><span class="line">[root@ns2 ~]<span class="comment"># yum list available | wc -l     //统计 软件仓库中可用（尚未安装）的软件包</span></span><br><span class="line">10272</span><br><span class="line">[root@ns2 ~]<span class="comment"># yum list updates | wc -l       //统计 只列出可以升级的版本的软件包</span></span><br><span class="line">197</span><br></pre></td></tr></table></figure>
-<h4 id="yum-info-————-查询软件包的描述信息"><a href="#yum-info-————-查询软件包的描述信息" class="headerlink" title="yum info ———— 查询软件包的描述信息"></a>yum info ———— 查询软件包的描述信息</h4><p>当需要查看某个软件包的描述信息时，可以执行“yum info 软件包名”，其中子命令info表示获取信息。<br>例如执行以下操作可以查看软件包 httpd 的信息。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># yum info httpd</span></span><br><span class="line">已加载插件：fastestmirror, langpacks</span><br><span class="line">Loading mirror speeds from cached hostfile</span><br><span class="line">可安装的软件包</span><br><span class="line">名称    ：httpd</span><br><span class="line">架构    ：x86_64</span><br><span class="line">版本    ：2.4.6</span><br><span class="line">发布    ：80.el7.centos</span><br><span class="line">大小    ：2.7 M</span><br><span class="line">源    ：my</span><br><span class="line">简介    ： Apache HTTP Server</span><br><span class="line">网址    ：http://httpd.apache.org/</span><br><span class="line">协议    ： ASL 2.0</span><br><span class="line">描述    ： The Apache HTTP Server is a powerful, efficient, and extensible</span><br><span class="line">         : web server.</span><br></pre></td></tr></table></figure>
-<h4 id="yum-search-————-查询指定的软件包"><a href="#yum-search-————-查询指定的软件包" class="headerlink" title="yum search ———— 查询指定的软件包"></a>yum search ———— 查询指定的软件包</h4><p>当需要根据某个关键词来查找相关的软件包时，可以执行“yum search 关键词”，默认仅根据软件包名称和描述信息进行搜索；<br>若执行“yum search all 关键词”，可以扩大搜索范围。<br>例如执行以下操作将搜索软件仓库并列出于“httpd”相关的软件包。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># yum search all httpd</span></span><br><span class="line">已加载插件：fastestmirror, langpacks</span><br><span class="line">Loading mirror speeds from cached hostfile</span><br><span class="line">========================================================================= 匹配：httpd =========================================================================</span><br><span class="line">httpd-devel.x86_64 : Development interfaces <span class="keyword">for</span> the Apache HTTP server</span><br><span class="line">httpd-manual.noarch : Documentation <span class="keyword">for</span> the Apache HTTP server</span><br><span class="line">httpd-tools.x86_64 : Tools <span class="keyword">for</span> use with the Apache HTTP Server</span><br><span class="line">libmicrohttpd.x86_64 : Lightweight library <span class="keyword">for</span> embedding a webserver <span class="keyword">in</span> applications</span><br><span class="line">httpd.x86_64 : Apache HTTP Server</span><br><span class="line">mod_dav_svn.x86_64 : Apache httpd module <span class="keyword">for</span> Subversion server</span><br><span class="line">mod_fcgid.x86_64 : FastCGI interface module <span class="keyword">for</span> Apache 2</span><br><span class="line">mod_lookup_identity.x86_64 : Apache module to retrieve additional information about the authenticated user</span><br><span class="line">mod_session.x86_64 : Session interface <span class="keyword">for</span> the Apache HTTP Server</span><br><span class="line">mod_ssl.x86_64 : SSL/TLS module <span class="keyword">for</span> the Apache HTTP Server</span><br></pre></td></tr></table></figure>
-<h3 id="查询软件包组"><a href="#查询软件包组" class="headerlink" title="查询软件包组"></a>查询软件包组</h3><p>yum grouplist [包组名]…     //查询软件包组列表<br>yum groupinfo &lt;包组名&gt;…     //查询软件包组的描述信息</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># yum grouplist</span></span><br><span class="line">已加载插件：fastestmirror, langpacks</span><br><span class="line">没有安装组信息文件</span><br><span class="line">Maybe run: yum groups mark convert (see man yum)</span><br><span class="line">Loading mirror speeds from cached hostfile</span><br><span class="line">可用的环境分组：</span><br><span class="line">   最小安装</span><br><span class="line">   基础设施服务器</span><br><span class="line">   计算节点</span><br><span class="line">   文件及打印服务器</span><br><span class="line">   基本网页服务器</span><br><span class="line">   虚拟化主机</span><br><span class="line">   带 GUI 的服务器</span><br><span class="line">   GNOME 桌面</span><br><span class="line">   KDE Plasma Workspaces</span><br><span class="line">   开发及生成工作站</span><br><span class="line">可用组：</span><br><span class="line">   传统 UNIX 兼容性</span><br><span class="line">   兼容性程序库</span><br><span class="line">   图形管理工具</span><br><span class="line">   安全性工具</span><br><span class="line">   开发工具</span><br><span class="line">   控制台互联网工具</span><br><span class="line">   智能卡支持</span><br><span class="line">   科学记数法支持</span><br><span class="line">   系统管理</span><br><span class="line">   系统管理工具</span><br><span class="line">完成</span><br><span class="line">[root@ns1 ~]<span class="comment"># yum grouplist 最小安装</span></span><br><span class="line">已加载插件：fastestmirror, langpacks</span><br><span class="line">没有安装组信息文件</span><br><span class="line">Maybe run: yum groups mark convert (see man yum)</span><br><span class="line">Loading mirror speeds from cached hostfile</span><br><span class="line">可用的环境分组：</span><br><span class="line">   最小安装</span><br><span class="line">完成</span><br><span class="line">[root@ns1 ~]<span class="comment"># yum groupinfo 最小安装</span></span><br><span class="line">已加载插件：fastestmirror, langpacks</span><br><span class="line">没有安装组信息文件</span><br><span class="line">Maybe run: yum groups mark convert (see man yum)</span><br><span class="line">Loading mirror speeds from cached hostfile</span><br><span class="line"></span><br><span class="line">环境分组：最小安装</span><br><span class="line">环境 ID：minimal</span><br><span class="line"> 描述：基本功能。</span><br><span class="line">必备组：</span><br><span class="line">   +core</span><br><span class="line">可选组：</span><br><span class="line">   +debugging</span><br></pre></td></tr></table></figure>
-<h4 id="安装软件"><a href="#安装软件" class="headerlink" title="安装软件"></a>安装软件</h4><p>yum install [软件命令]     //可使用“-y”参数，自动确认<br>yum install &lt;包组名&gt;      //-y ，自动确认。<br>####升级软件<br>yum update<br>yum groupupdate</p>
-<h4 id="卸载软件"><a href="#卸载软件" class="headerlink" title="卸载软件"></a>卸载软件</h4><p>yum remove &lt;软件名&gt;…<br>yum groupremove &lt;包组名&gt;…</p>
-<p>##课后作业<br>1.将CentOS7的ISO镜像文件挂载到/media/loop 目录下，并配置为本机的YUM仓库。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># mkdir -p media/loop.repo</span></span><br><span class="line">[root@ns1 media]<span class="comment"># mount /dev/sr0 /root/media/loop/</span></span><br><span class="line">mount: /dev/sr0 写保护，将以只读方式挂载</span><br><span class="line">[root@ns1 ~]<span class="comment"># touch /etc/yum.repos.d/loop</span></span><br><span class="line">[loop]</span><br><span class="line">name=my repodata loop</span><br><span class="line">baseurl=file:///media/loop</span><br><span class="line">enabled=1</span><br><span class="line">gpgcheck=0</span><br><span class="line"></span><br><span class="line">:wq</span><br><span class="line">[root@ns1 ~]<span class="comment"># yum clean all</span></span><br><span class="line">已加载插件：fastestmirror, langpacks</span><br><span class="line">正在清理软件源： loop</span><br><span class="line">Cleaning up everything</span><br><span class="line">Maybe you want: rm -rf /var/cache/yum, to also free up space taken by orphaned data from disabled or removed repos</span><br><span class="line">Cleaning up list of fastest mirrors</span><br><span class="line">[root@ns1 ~]<span class="comment"># yum repolist </span></span><br><span class="line">已加载插件：fastestmirror, langpacks</span><br><span class="line">Determining fastest mirrors</span><br><span class="line">loop                                                                                                                                    | 3.6 kB  00:00:00     </span><br><span class="line">(1/2): loop/group_gz                                                                                                                    | 166 kB  00:00:00     </span><br><span class="line">(2/2): loop/primary_db                                                                                                                  | 3.1 MB  00:00:00     </span><br><span class="line">源标识                                                                  源名称                                                                            状态</span><br><span class="line">loop                                                                    my repodata loop                                                                  3,971</span><br><span class="line">repolist: 3,971</span><br></pre></td></tr></table></figure>
-<p>2.查看/var/cache/yum 目录下的数据，然后执行“yum clean all”命令，再次查看目录“/var/cache/yum”，观察前后变化。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># cd /var/cache/yum/</span></span><br><span class="line">[root@ns1 yum]<span class="comment"># ls</span></span><br><span class="line">x86_64</span><br><span class="line">[root@ns1 yum]<span class="comment"># yum clean all</span></span><br><span class="line">已加载插件：fastestmirror, langpacks</span><br><span class="line">正在清理软件源： loop</span><br><span class="line">Cleaning up everything</span><br><span class="line">Maybe you want: rm -rf /var/cache/yum, to also free up space taken by orphaned data from disabled or removed repos</span><br><span class="line">Cleaning up list of fastest mirrors</span><br><span class="line">[root@ns1 yum]<span class="comment"># ls</span></span><br><span class="line">x86_64</span><br></pre></td></tr></table></figure>
-<p>3.构建NFS共享服务，将本机的/home/ 目录发布给其他主机使用。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># yum -y install nfs-utils rpcbind</span></span><br><span class="line">[root@ns1 ~]<span class="comment"># systemctl start nfs</span></span><br><span class="line">[root@ns1 ~]<span class="comment"># systemctl start rpcbind</span></span><br><span class="line">[root@ns1 ~]<span class="comment"># vim /etc/exports</span></span><br><span class="line">/home/  192.168.160.5(rw,sync,no_root_squash)</span><br><span class="line"></span><br><span class="line">:wq</span><br><span class="line">[root@ns2 ~]<span class="comment"># showmount -e 192.168.160.7     //切换160.5 查看NFS服务端共享了那些目录。</span></span><br><span class="line">Export list <span class="keyword">for</span> 192.168.160.7:</span><br><span class="line">/home 192.168.160.5</span><br></pre></td></tr></table></figure>
-
-    
-
-    
-
-    
-
-  </div>
-  <div class="article-info article-info-index">
-    
-    
+        <div class="article-info info-on-right">
+          
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">yum</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">http & yum</a>
         		</li>
       		
 		</ul>
 	</div>
 
-    
+          
 
-    
-
-    
-    <div class="clearfix"></div>
-  </div>
+        </div>
+        <div class="clearfix"></div>
+    </header>
   </div>
 </article>
-
-
-<nav id="article-nav">
-  
-    <a href="/2020/06/28/NFS%E5%85%B1%E4%BA%AB%E5%AD%98%E5%82%A8%E6%9C%8D%E5%8A%A1/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          NFS共享存储服务
-        
-      </div>
-    </a>
   
   
-    <a href="/2020/06/24/%E8%BF%9C%E7%A8%8B%E8%AE%BF%E9%97%AE%E5%8F%8A%E6%8E%A7%E5%88%B6/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">远程访问及控制</div>
-      <i class="icon-circle-right"></i>
-    </a>
+    </div></section>
   
-</nav>
 
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-
-
-
-
-
-
-
-
+    
 
 
           </div>
@@ -328,9 +216,9 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: true,
+		isPost: false,
 		isArchive: false,
-		isTag: false,
+		isTag: true,
 		isCategory: false,
 		open_in_new: true,
 		toc_hide_index: true,
