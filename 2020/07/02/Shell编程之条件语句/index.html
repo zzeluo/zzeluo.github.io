@@ -6,17 +6,26 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Tag: ssh | 择萝</title>
+  <title>Shell脚本应用（一） | 择萝</title>
   <meta name="generator" content="hexo-theme-yilia-plus">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   
-  <meta property="og:type" content="website">
-<meta property="og:title" content="择萝">
-<meta property="og:url" content="http://yoursite.com/tags/ssh/index.html">
+  <meta name="description" content="条件测试 Shlle 环境根据命令执行后的返回状态值（$?）来判断是否执行成功，当返回值为0时表示成功，否则（非0值）表示失败或异常。 使用专门的测试工具————test 命令，测试特定的表达式是否成立，当条件成立时，测试语句的返回值为0，否则为其他数值。 12格式1：test 条件表达式格式2：[ 条件表达式 ]    &#x2F;&#x2F;方括号“[” 或者 “]” 与条件表达式之间需要至少一个空格进行分隔。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Shell脚本应用（一）">
+<meta property="og:url" content="http://yoursite.com/2020/07/02/Shell%E7%BC%96%E7%A8%8B%E4%B9%8B%E6%9D%A1%E4%BB%B6%E8%AF%AD%E5%8F%A5/index.html">
 <meta property="og:site_name" content="择萝">
+<meta property="og:description" content="条件测试 Shlle 环境根据命令执行后的返回状态值（$?）来判断是否执行成功，当返回值为0时表示成功，否则（非0值）表示失败或异常。 使用专门的测试工具————test 命令，测试特定的表达式是否成立，当条件成立时，测试语句的返回值为0，否则为其他数值。 12格式1：test 条件表达式格式2：[ 条件表达式 ]    &#x2F;&#x2F;方括号“[” 或者 “]” 与条件表达式之间需要至少一个空格进行分隔。">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://yoursite.com/2020/07/02/Shell%E7%BC%96%E7%A8%8B%E4%B9%8B%E6%9D%A1%E4%BB%B6%E8%AF%AD%E5%8F%A5/img/7.2.png">
+<meta property="og:image" content="http://yoursite.com/2020/07/02/Shell%E7%BC%96%E7%A8%8B%E4%B9%8B%E6%9D%A1%E4%BB%B6%E8%AF%AD%E5%8F%A5/img/7.2.1.png">
+<meta property="og:image" content="http://yoursite.com/2020/07/02/Shell%E7%BC%96%E7%A8%8B%E4%B9%8B%E6%9D%A1%E4%BB%B6%E8%AF%AD%E5%8F%A5/img/7.2.2.png">
+<meta property="article:published_time" content="2020-07-02T09:01:40.000Z">
+<meta property="article:modified_time" content="2020-07-02T12:42:12.422Z">
 <meta property="article:author" content="择萝">
+<meta property="article:tag" content="shell">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/2020/07/02/Shell%E7%BC%96%E7%A8%8B%E4%B9%8B%E6%9D%A1%E4%BB%B6%E8%AF%AD%E5%8F%A5/img/7.2.png">
   
   
     <link rel="icon" href="/favicon.ico">
@@ -137,65 +146,173 @@
               class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-Shell编程之条件语句" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2020" class="archive-year">2020</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	
-<a href="/2020/06/24/%E8%BF%9C%E7%A8%8B%E8%AE%BF%E9%97%AE%E5%8F%8A%E6%8E%A7%E5%88%B6/" class="archive-article-date">
-        <time datetime="2020-06-24T08:05:42.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-24</time>
-</a>
-
-        </div>
-    	 
+      <header class="article-header">
   
-    <h1 itemprop="name">
-	
-	  <a class="archive-article-title" href="/2020/06/24/%E8%BF%9C%E7%A8%8B%E8%AE%BF%E9%97%AE%E5%8F%8A%E6%8E%A7%E5%88%B6/" target="_blank">远程访问及控制</a>
   
+    <h1 class="article-title" itemprop="name">
+      Shell脚本应用（一）
     </h1>
   
 
 
-        <div class="article-info info-on-right">
-          
+  
+  
+<a href="/2020/07/02/Shell%E7%BC%96%E7%A8%8B%E4%B9%8B%E6%9D%A1%E4%BB%B6%E8%AF%AD%E5%8F%A5/" class="archive-article-date">
+        <time datetime="2020-07-02T09:01:40.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-07-02</time>
+</a>
+
+  
+  
+    
+<div style="margin-top:10px;">
+  <span class="post-time">
+    <span class="post-meta-item-icon">
+      <!-- fonts.scss -->
+      <!-- 百度字体平台:http://fontstore.baidu.com/static/editor/index.html -->
+      <i class="icon-statistics"></i>
+      <span class="post-meta-item-text"> 字数统计:</span>
+      <span class="post-count">2.6k字</span>
+    </span>
+  </span>
+
+  <span class="post-time">
+    &nbsp; | &nbsp;
+    <span class="post-meta-item-icon">
+      <i class="icon-book icon"></i>
+      <span class="post-meta-item-text"> 阅读时长≈</span>
+      <span class="post-count">10分</span>
+    </span>
+  </span>
+</div>
+
+
+  
+  </header>
+  
+  <div class="article-entry" itemprop="articleBody">
+    
+    <h2 id="条件测试"><a href="#条件测试" class="headerlink" title="条件测试"></a>条件测试</h2><p> Shlle 环境根据命令执行后的返回状态值（$?）来判断是否执行成功，当返回值为0时表示成功，否则（非0值）表示失败或异常。</p>
+<h3 id="使用专门的测试工具————test-命令，"><a href="#使用专门的测试工具————test-命令，" class="headerlink" title="使用专门的测试工具————test 命令，"></a>使用专门的测试工具————test 命令，</h3><p>测试特定的表达式是否成立，当条件成立时，测试语句的返回值为0，否则为其他数值。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">格式1：<span class="built_in">test</span> 条件表达式</span><br><span class="line">格式2：[ 条件表达式 ]    //方括号“[” 或者 “]” 与条件表达式之间需要至少一个空格进行分隔。</span><br></pre></td></tr></table></figure>
+<p>比较常用的条件操作包括文件测试 、整数值比较 、字符串比较，以及针对多个条件的逻辑测试。</p>
+<h3 id="文件测试"><a href="#文件测试" class="headerlink" title="文件测试"></a>文件测试</h3><p>文件测试指的是根据给定的路劲名称，判断对应的时文件还是目录，或者判断文件是否可读 、可写 、可执行。<br>常见的操作选项：<br>-d ：测试是否为目录（Directory）。<br>-e ：测试目录或文件是否存在（Exist）。<br>-f ：测试是否为文件（File）。<br>-r ：测试当前用户是否有权限读取（Read）。<br>-w ：测试当前用户是否有权限写入（Write）。<br>-x ：测试是否设置有可执行（Excute）权限。<br>执行条件测试操作以后，通过预定义变量 “$?” 可以获得测试命令的返回状态值，从而判断该条件是否成立。</p>
+<h4 id="格式："><a href="#格式：" class="headerlink" title="格式："></a>格式：</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[ 操作符 文件或目录 ]</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># [ -d /media/cdrom ]</span></span><br><span class="line">[root@ns1 ~]<span class="comment"># echo $?               //查看前一命令的返回值</span></span><br><span class="line">0                                   //返回0表示条件成立</span><br></pre></td></tr></table></figure>
+<p>为了更加直观地查看测试结果，可以结合命令分隔符 “&amp;&amp;” 和 echo 命令一起使用，当条件成立时直接输出 “YES”。<br>其中，“&amp;&amp;” 符号表示 “而且” 的关系，只有当前面的命令执行成功后才会执行后面的命令，否则后面的命令将会被忽略。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># [ -d /media/cdrom/Server ]&amp;&amp; echo "YES"</span></span><br><span class="line">                                                        //无输出表示目录不存在</span><br><span class="line">[root@ns1 ~]<span class="comment"># [ -d /media/cdrom ]&amp;&amp; echo "YES"</span></span><br><span class="line">YES                                                   //输出 “YES” 表示该目录存在</span><br></pre></td></tr></table></figure>
+<p>使用 [[]] 也可以进行条件测试，<br>下面的命令可以判断当前目录下是否存在名为 kgc 的文件。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># [[ -f kgc ]]&amp;&amp; echo 1 || echo 0</span></span><br><span class="line">0                                                       //0 表示文件不存在</span><br><span class="line">[root@ns1 ~]<span class="comment"># touch kgc</span></span><br><span class="line">[root@ns1 ~]<span class="comment"># [[ -f kgc ]]&amp;&amp; echo 1 || echo 0</span></span><br><span class="line">1                                                       //1 表示文件存在</span><br></pre></td></tr></table></figure>
+<p>思路：|| 前后只能成立一个，当前面成立时所以输出“1” ，当前面不成立时，输出 || 后的 echo 0 。</p>
+<h3 id="整数值比较"><a href="#整数值比较" class="headerlink" title="整数值比较"></a>整数值比较</h3><p>整数值比较指的是根据给定的两个整数值，判断第一个数与第二个数的关系，如 是否大于 、等于 、小于第二个数。<br>常用操作选项：<br>-eq ：等于（Equal）<br>-ne ：不等于（Not Equal）<br>-gt ：大于（Greater Than）<br>-lt :小于（Lesser Than）<br>-le ：小于或等于（Lesser or Equal）<br>-ge ：大于或等于（Greater or Equal）</p>
+<h4 id="格式：-1"><a href="#格式：-1" class="headerlink" title="格式："></a>格式：</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[ 整数1 操作符 整数2 ]</span><br></pre></td></tr></table></figure>
+<p>例如，若要判断当前已登录的用户数，当小于5个时输出 “Too less.” </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># Unum=`who |wc -l`         /查看当前已登录用户数  //命令替换的方式嵌入需要使用反撇号。</span></span><br><span class="line">[root@ns1 ~]<span class="comment"># [ $Unum -lt 5 ] &amp;&amp; echo "Too less."         //测试结果（小于）</span></span><br><span class="line">Too less.</span><br></pre></td></tr></table></figure>
+<h3 id="字符串比较"><a href="#字符串比较" class="headerlink" title="字符串比较"></a>字符串比较</h3><p>字符串比较通常用来检查用户输入 、系统环境等是否满足条件。<br>常用操作选项：<br>== ：字符串内容相同。<br>!= ：字符串内容不同，!号表示相反的意思。<br>-z ：字符串内容为空。</p>
+<h4 id="格式：-2"><a href="#格式：-2" class="headerlink" title="格式："></a>格式：</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[ 字符串1 = 字符串2 ]</span><br><span class="line">[ 字符串1 != 字符串2 ]</span><br><span class="line">[ -z 字符串 ]</span><br></pre></td></tr></table></figure>
+<p>例如，若要判断当前系统的语言环境，当发现不是 “en.US” 时输出提示信息 “Not en.US”,</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># echo $LANG</span></span><br><span class="line">zh_CN.UTF-8</span><br><span class="line">[root@ns1 ~]<span class="comment"># [ $LANG != "en.US" ] &amp;&amp; echo "Not en.US"</span></span><br><span class="line">Not en.US</span><br></pre></td></tr></table></figure>
+
+<h3 id="逻辑测试"><a href="#逻辑测试" class="headerlink" title="逻辑测试"></a>逻辑测试</h3><p>逻辑测试指的是判断两个或多个条件之间的依赖关系。<br>当系统任务取决于多个不同的条件时，判断的根据这些条件同时成立还是只要有其中一个成立等情况，需要有一个测试过程。<br>常用的逻辑测试操作如下：<br>&amp;&amp; ：逻辑与，表示 “而且”，只有当前后两个条件都成立时，整个测试命令的返回值才为0（结果成立）。使用 Test 命令测试时，“&amp;&amp;” 可改为 “-a” 。<br>|| ：逻辑或，表示 “或者” ，只要前后两个条件中有一个成立，整个测试命令的返回值即为0（结果成立）。使用 Test 命令测试时，“||” 可改为 “-a” 。<br>! ：逻辑否，表示 “不” ，只有当指定的条件不成立时，整个测试命令的返回值才为0（结果成立）。</p>
+<h4 id="例如，判断当前Linux系统的内核版本是否大于-2-4，"><a href="#例如，判断当前Linux系统的内核版本是否大于-2-4，" class="headerlink" title="例如，判断当前Linux系统的内核版本是否大于 2.4，"></a>例如，判断当前Linux系统的内核版本是否大于 2.4，</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># uname -r                 //查看内核版本信息</span></span><br><span class="line">3.10.0-862.el7.x86_64</span><br><span class="line">[root@ns1 ~]<span class="comment"># Mnum=$(uname -r | awk -F. '&#123;print $1&#125;')          //取主版本号</span></span><br><span class="line">[root@ns1 ~]<span class="comment"># Snum=$(uname -r | awk -F. '&#123;print $2&#125;')          //取次版本号</span></span><br><span class="line">[root@ns1 ~]<span class="comment"># [ $Mnum -ge 2 ] &amp;&amp; [ $Snum -gt 4 ] &amp;&amp; echo "符合要求"</span></span><br><span class="line">符合要求</span><br></pre></td></tr></table></figure>
+
+<h2 id="IF-语句"><a href="#IF-语句" class="headerlink" title="IF 语句"></a>IF 语句</h2><h3 id="if语句的结构"><a href="#if语句的结构" class="headerlink" title="if语句的结构"></a>if语句的结构</h3><p>在 Shell 脚本应用中，if 语句是最为常用的一种流程控制方式，用来根据特定的条件测试结果，分别执行不同的操作（如果······那么······）。</p>
+<h3 id="单分支的-if-语句"><a href="#单分支的-if-语句" class="headerlink" title="单分支的 if 语句"></a>单分支的 if 语句</h3><p>if 语句的 “分支” 指的是不同测试结果所对应的执行语句（一条或多条）。对于单分支的选择结构，只有在 “条件成立” 时才会执行相应的代码，否则不执行任何操作。<br>单分支 if 语句的语法格式：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> 条件测试操作 </span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">	命令序列</span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
+<p>单分支 if 语句的执行流程：首先判断条件测试操作的结果，如果返回值为0，表示条件成立，则执行 then 后面的命令序列，一直到遇见 fi 结束判断为止，继续执行其他脚本代码；如果返回值不为0，则忽略 then 后面的命令序列，直接跳至 fi 行以后执行其他脚本代码。<br><img src="img/7.2.png" alt="单分支的if语句结构"></p>
+<h4 id="单分支-if-语句应用"><a href="#单分支-if-语句应用" class="headerlink" title="单分支 if 语句应用"></a>单分支 if 语句应用</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># vim chkmountdir.sh</span></span><br><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line">MOUNT_DIR=<span class="string">"/media/cdrom/"</span></span><br><span class="line"><span class="keyword">if</span> [ ! -d <span class="variable">$MOUNT_DIR</span> ]</span><br><span class="line"><span class="keyword">then</span>    </span><br><span class="line">        mkdir -p <span class="variable">$MOUNT_DIR</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line">[root@ns1 ~]<span class="comment"># chmod +x chkmountdir.sh</span></span><br><span class="line">[root@ns1 ~]<span class="comment"># ./chkmountdir.sh</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="双分支的-if-语句"><a href="#双分支的-if-语句" class="headerlink" title="双分支的 if 语句"></a>双分支的 if 语句</h3><p>对于双分支的选择结构，要求针对 “条件成立” “条件不成立” 两种情况分别执行不同的操作。<br>双分支 if 语句的语法格式：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> 条件测试操作 </span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">	命令序列1</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">	命令序列2</span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
+<p>双分支 if 语句的执行流程：首先判断条件测试操作的结果，如果条件成立，则执行 then 后面的命令序列1，忽略 else 及后面的命令序列2，直到遇见 fi 结束判断；如果条件不成立，则忽略 then 及后面的命令序列1，直接跳至 else 后面的命令序列2并执行，知道遇见 fi 结束判断。<br><img src="img/7.2.1.png" alt="双分支的if语句结构"></p>
+<h4 id="双分支-if-语句应用"><a href="#双分支-if-语句应用" class="headerlink" title="双分支 if 语句应用"></a>双分支 if 语句应用</h4><p>双分支 if 语句只是在单分支的基础上针对 “条件不成立” 的情况执行另一种操作，而不是 “坐视不管” 地不执行任何操作。<br>例如，编写一个连通性测试脚本 pinghost.sh ，通过位置参数 $1 提供目标主机地址，然后根据 ping 检测结果给出相应地提示。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># vim pinghost.sh</span></span><br><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line">ping -c 3 -i 0.2 -W 3 <span class="variable">$1</span> &gt; /dev/null         //检测目标主机是否能连通</span><br><span class="line"><span class="keyword">if</span> [ $? -eq 0 ]                              //判断前一条命令的返回状态</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"Host <span class="variable">$1</span> is up."</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"Host <span class="variable">$1</span> is down."</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line">[root@ns1 ~]<span class="comment"># chmod +x pinghost.sh</span></span><br></pre></td></tr></table></figure>
+<p>上述脚本代码中，为了提高 ping 命令的测试效率，使用了 “-c” “-i” “-W” 选项，分别指定只发送三个测试包 、间隔0.2秒 、超时3秒。 另外，通过 “&amp;&gt; /dev/null” 屏蔽了 ping 命令执行过程的输出信息。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># ./pinghost.sh 192.168.160.2      //测试已开启的主机</span></span><br><span class="line">Host 192.168.160.2 is up.</span><br><span class="line">[root@ns1 ~]<span class="comment"># ./pinghost.sh 192.168.160.100    //测试已关闭的主机</span></span><br><span class="line">Host 192.168.160.100 is down.</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="多分支的-if-语句"><a href="#多分支的-if-语句" class="headerlink" title="多分支的 if 语句"></a>多分支的 if 语句</h3><p>由于 if 语句可以根据测试结果的成立 、不成立分别执行操作，所以能够嵌套使用，进行多次判断。<br>多分支 if 语句的语法格式：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> 条件测试操作1 </span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">	命令序列1</span><br><span class="line"><span class="keyword">elif</span> 条件测试操作2</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">	命令序列2</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">	命令序列3</span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
+<p>多分支 if 语句的执行流程：首先判断条件测试操作1 的结果，如果条件 1 成立，则执行命令序列 1，然后跳至 fi 结束判断；如果条件 1 不成立，则继续判断条件测试操作 2 的结果，如果条件 2 成立，则执行命令序列 2，然后跳至 fi 结束判断······如果 所有条件都不满足，则执行 else 后面的命令序列 n ，直到遇见 fi 结束判断。<br><img src="img/7.2.2.png" alt="多分支的if语句结构"></p>
+<h4 id="多分支的-if-语句-1"><a href="#多分支的-if-语句-1" class="headerlink" title="多分支的 if 语句"></a>多分支的 if 语句</h4><p>这种结构能够根据多个互斥的条件分别执行不同的操作，实际上等同于嵌套使用的 if 语句。<br>例如，编写一个成绩分档的脚本 gradediv.sh ，根据输入的考试分数不同来区分优秀 、合格 、不合格三档。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># vim gradediv.sh</span></span><br><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="built_in">read</span> -p <span class="string">"请输入您的分数（0~100）："</span> GRADE</span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$GRADE</span> -ge 85 ] &amp;&amp; [ <span class="variable">$GRADE</span> -le 100 ]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"<span class="variable">$GRADE</span> 分！优秀"</span></span><br><span class="line"><span class="keyword">elif</span> [ <span class="variable">$GRADE</span> -ge 70 ] &amp;&amp; [ <span class="variable">$GRADE</span> -le 84 ]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"<span class="variable">$GRADE</span> 分！合格"</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"<span class="variable">$GRADE</span> 分！不合格"</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line">[root@ns1 ~]<span class="comment"># chmod +x gradediv.sh</span></span><br></pre></td></tr></table></figure>
+<p>执行 gradediv.sh 脚本的效果</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># ./gradediv.sh </span></span><br><span class="line">请输入您的分数（0~100）：74</span><br><span class="line">74 分！合格</span><br><span class="line">[root@ns1 ~]<span class="comment"># ./gradediv.sh </span></span><br><span class="line">请输入您的分数（0~100）：89</span><br><span class="line">89 分！优秀</span><br><span class="line">[root@ns1 ~]<span class="comment"># ./gradediv.sh </span></span><br><span class="line">请输入您的分数（0~100）：45</span><br><span class="line">45 分！不合格</span><br></pre></td></tr></table></figure>
+
+<p>本章总结：<br>使用 [] 或 test 命令可以执行条件测试操作，包括字符串和整数的比较 、逻辑测试和文件测试等。<br>整数比较操作符号包括 -gt 、 -ge 、 -eq 、 lt 、 le 、 -ne。<br>常用的字符串比较操作符包括 == 、 != 、 -z 。<br>逻辑测试操作符包括 &amp;&amp; 、 || 、 ! 。<br>执行命令或程序后会返回一个状态值，若返回值为 0，表示执行成功；若不为 0，则表示执行失败或出现异常。<br>通过使用 if 语句，可以根据条件有选择地执行不同操作，选择类型包括但分支 、双分支 、多分支。</p>
+
+    
+
+    
+
+    
+
+  </div>
+  <div class="article-info article-info-index">
+    
+    
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">ssh</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">shell</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
+    
 
     
+
+    
+    <div class="clearfix"></div>
+  </div>
+  </div>
+</article>
+
+
+<nav id="article-nav">
+  
+  
+    <a href="/2020/07/01/Shell%E7%BC%96%E7%A8%8B%E8%A7%84%E8%8C%83%E4%B8%8E%E5%8F%98%E9%87%8F/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Shell脚本应用（一）</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+
+
+
+
+
+
+
+
 
 
           </div>
@@ -216,9 +333,9 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: true,
 		toc_hide_index: true,
