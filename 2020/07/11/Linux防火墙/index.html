@@ -18,7 +18,7 @@
 <meta property="og:description" content="简介防火墙是只设置在不同网络与网络安全与之间的一系列部件的场合，也是不同安全与之间信息的唯一出口。通过监测、限制并更改跨越防火墙的数据流，尽可能的对外屏蔽网络内部的信息、结构和运行状态，且有选择地接受外部网络访问。在内外网之间架起一道屏障，以避免发生不可预知或潜在的入侵。从传统意义上来说防火墙技术分为三类：包过滤（Packet Filtering）、应用代理（Application Proxy）、">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-07-11T06:02:13.000Z">
-<meta property="article:modified_time" content="2020-07-10T13:56:42.454Z">
+<meta property="article:modified_time" content="2020-07-10T14:07:37.453Z">
 <meta property="article:author" content="择萝">
 <meta property="article:tag" content="firewalld">
 <meta name="twitter:card" content="summary">
@@ -170,7 +170,7 @@
       <!-- 百度字体平台:http://fontstore.baidu.com/static/editor/index.html -->
       <i class="icon-statistics"></i>
       <span class="post-meta-item-text"> 字数统计:</span>
-      <span class="post-count">3.2k字</span>
+      <span class="post-count">3.3k字</span>
     </span>
   </span>
 
@@ -342,7 +342,21 @@ public
 </code></pre>
 <p>(2) 显示默认区域的所有规则。</p>
 <pre><code class="prism language-terminal">[root@localhost ~]# firewall-cmd --list-all
-</code></pre>
+public
+  target: default
+  icmp-block-inversion: no
+  interfaces: 
+  sources: 
+  services: ssh dhcpv6-client
+  ports: 
+  protocols: 
+  masquerade: no
+  forward-ports: 
+  source-ports: 
+  icmp-blocks: 
+  rich rules: 
+
+<p></code></pre></p>
 <p>(3) 显示网络接口ens33对应区域</p>
 <pre><code class="prism language-terminal">[root@localhost ~]# firewall-cmd --get-zone-of-interface=ens33
 public

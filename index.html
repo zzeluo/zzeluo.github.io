@@ -325,7 +325,21 @@ public
 </code></pre>
 <p>(2) 显示默认区域的所有规则。</p>
 <pre><code class="prism language-terminal">[root@localhost ~]# firewall-cmd --list-all
-</code></pre>
+public
+  target: default
+  icmp-block-inversion: no
+  interfaces: 
+  sources: 
+  services: ssh dhcpv6-client
+  ports: 
+  protocols: 
+  masquerade: no
+  forward-ports: 
+  source-ports: 
+  icmp-blocks: 
+  rich rules: 
+
+<p></code></pre></p>
 <p>(3) 显示网络接口ens33对应区域</p>
 <pre><code class="prism language-terminal">[root@localhost ~]# firewall-cmd --get-zone-of-interface=ens33
 public
