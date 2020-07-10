@@ -144,6 +144,112 @@
             
 
   
+    <article id="post-NFS共享存储服务" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+  
+  
+    <h1 itemprop="name">
+	
+	  <a class="article-title" href="/2020/06/28/NFS%E5%85%B1%E4%BA%AB%E5%AD%98%E5%82%A8%E6%9C%8D%E5%8A%A1/" target="_blank">NFS共享存储服务</a>
+  
+    </h1>
+  
+
+
+  
+  
+<a href="/2020/06/28/NFS%E5%85%B1%E4%BA%AB%E5%AD%98%E5%82%A8%E6%9C%8D%E5%8A%A1/" class="archive-article-date">
+        <time datetime="2020-06-28T06:31:33.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-28</time>
+</a>
+
+  
+  
+    
+
+  
+  </header>
+  
+  <div class="article-entry" itemprop="articleBody">
+    
+    <p>NFS 是一种基于 TCP/IP 传输的网络文件系统协议，最初由sun公司开发。通过使用NFS协议，NFS客户机可以像访问本地目录一样访问远程NFS服务器中的共享资源。对于大多数负载均衡群集来说，使用NFS协议来共享数据存储是比较常见的做法，NFS也是NAS存储设备必然支持的一种协议。但是，NFS 没有用户认证机制，而且数据在网上明文传输，所以安全性很差，一般只能在局域网中使用。</p>
+<h3 id="NFS-应用场景"><a href="#NFS-应用场景" class="headerlink" title="NFS 应用场景"></a>NFS 应用场景</h3><p>在企业集群架构的工作场景中，特别是中小型网站公司，NFS网络文件系统一般被用来存储共享视频，图片等静态资源文件。<br>NFS 服务的实现依赖于 RPC（Remote Process Call，远程过程调用）机制，RPC 充当NFS 客户端和NFS 服务器的中介，以完成远程到本地的映射过程。<br>在CentOS7 系统中，需要安装 nfs-utils (用于NFS 共享发布和访问)； rpcbind （用于RPC支持）。</p>
+<h3 id="安装-nfs-utils，rpcbind-软件包"><a href="#安装-nfs-utils，rpcbind-软件包" class="headerlink" title="安装 nfs-utils，rpcbind 软件包"></a>安装 nfs-utils，rpcbind 软件包</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># yum -y install nfs-utils rpcbind</span></span><br><span class="line">[root@ns1 ~]<span class="comment"># systemctl enable nfs</span></span><br><span class="line">[root@ns1 ~]<span class="comment"># systemctl enable rpcbind</span></span><br></pre></td></tr></table></figure>
+<h3 id="设置共享目录"><a href="#设置共享目录" class="headerlink" title="设置共享目录"></a>设置共享目录</h3><p>NFS 的配置文件为/etc/exports ，文件内容默认为空（无任何共享）。<br>在 exports文件中设置共享资源时，记录格式为“目录位置 客户机地址(权限选项)”。<br>####例如：将文件夹/media/loop 共享给192.168.160.5 网址使用，允许读写操作，</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># mkdir -p /media/loop</span></span><br><span class="line">[root@ns1 media]<span class="comment"># vim /etc/exports          </span></span><br><span class="line">/media/loop    192.168.160.5/24(rw,sync,no_root_squash)</span><br><span class="line"></span><br><span class="line">:wq</span><br></pre></td></tr></table></figure>
+<p>####其中客户机的地址可以是主机名，IP地址，网段地址，允许使用“* ” “？”通配符；<br>权限选项中的 rw 表示允许读写（ro 为只读），sync 表示同步写入，no_root_squash 表示当客户机以root身份访问时赋予本地root权限（默认是root_squash,将作为nfsnobody 用户降权对待）。<br>  当需要将同一个目录共享给不同的客户机时，且分配不同的权限时，只要以空格分隔指定多个“客户机（权限选项）”即可。<br>  例如，将/media/loop 目录共享给两个客户机，并分别给予只读，读写权限；</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># vim /etc/exports</span></span><br><span class="line">/media/loop     192.168.160.5/24(ro) 192.168.160.10/24(rw)</span><br></pre></td></tr></table></figure>
+<h4 id="启动NFS服务程序"><a href="#启动NFS服务程序" class="headerlink" title="启动NFS服务程序"></a>启动NFS服务程序</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># systemctl start rpcbind</span></span><br><span class="line">[root@ns1 ~]<span class="comment"># systemctl start nfs</span></span><br><span class="line">[root@ns1 ~]<span class="comment"># netstat -anpt |grep rpcbind</span></span><br><span class="line">tcp        0      0 0.0.0.0:111             0.0.0.0:*               LISTEN      6451/rpcbind        </span><br><span class="line">tcp6       0      0 :::111                  :::*                    LISTEN      6451/rpcbind</span><br></pre></td></tr></table></figure>
+<h4 id="查看本机发布的NFS共享目录"><a href="#查看本机发布的NFS共享目录" class="headerlink" title="查看本机发布的NFS共享目录"></a>查看本机发布的NFS共享目录</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@ns1 ~]<span class="comment"># showmount -e</span></span><br><span class="line">Export list <span class="keyword">for</span> ns1.kgc.com:</span><br><span class="line">/media/loop/ 192.168.160.0/24</span><br><span class="line">/home        192.168.160.5/24</span><br></pre></td></tr></table></figure>
+<h2 id="在客户机中访问NFS共享资源"><a href="#在客户机中访问NFS共享资源" class="headerlink" title="在客户机中访问NFS共享资源"></a>在客户机中访问NFS共享资源</h2><p>NFS 协议的目标是提供一种网络文件系统，因此对NFS共享的访问也是用mount命令来进行挂载，对于的文件系统类型为nfs。<br>既可以手动挂载，也可以加入fstab 配置文件来实现开机自动挂载。</p>
+<h4 id="安装rpcbind-软件包，并启动rpcbind服务"><a href="#安装rpcbind-软件包，并启动rpcbind服务" class="headerlink" title="安装rpcbind 软件包，并启动rpcbind服务"></a>安装rpcbind 软件包，并启动rpcbind服务</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># yum -y install rpcbind nfs-utils</span></span><br><span class="line">[root@localhost ~]<span class="comment"># systemctl enable rpcbind</span></span><br><span class="line">[root@localhost ~]<span class="comment"># systemctl start rpcbind</span></span><br></pre></td></tr></table></figure>
+<p>若已经安装了 nfs-utils 软件包，则客户机也可以使用showmount 查看NFS服务器端共享了那些目录，<br>查询格式为“showmount -e 服务器地址”。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@ns2 ~]<span class="comment"># showmount -e 192.168.160.7</span></span><br><span class="line">Export list <span class="keyword">for</span> 192.168.160.7:</span><br><span class="line">/media/loop/ 192.168.160.0/24</span><br><span class="line">/home        192.168.160.5/24</span><br></pre></td></tr></table></figure>
+<h4 id="手动挂载NFS-共享目录"><a href="#手动挂载NFS-共享目录" class="headerlink" title="手动挂载NFS 共享目录"></a>手动挂载NFS 共享目录</h4><p>以root的身份执行mount操作，将NFS服务器共享的/home 目录挂载到本地目录 /var/kgc。<br>与挂载本地系统不同的是，设备处应指出服务器地址。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@ns2 ~]<span class="comment"># mkdir /var/kgc</span></span><br><span class="line">[root@ns2 ~]<span class="comment"># mount 192.168.160.7:/home /var/kgc</span></span><br><span class="line">[root@ns2 ~]<span class="comment"># tail -1 /etc/mtab </span></span><br><span class="line">192.168.160.7:/home /var/kgc nfs4 rw,relatime,vers=4.1,rsize=262144,wsize=262144,namlen=255,hard,proto=tcp,port=0,timeo=600,retrans=2,sec=sys,clientaddr=192.168.160.5,local_lock=none,addr=192.168.160.7 0 0</span><br><span class="line">[root@ns2 ~]<span class="comment"># vi /var/kgc/index.html</span></span><br><span class="line">Real Web Server Document</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[root@ns1 ~]<span class="comment"># ls /home/       //服务器中验证，</span></span><br><span class="line">index.html</span><br></pre></td></tr></table></figure>
+<h3 id="fstab-自动挂载设置"><a href="#fstab-自动挂载设置" class="headerlink" title="fstab 自动挂载设置"></a>fstab 自动挂载设置</h3><p>修改 /etc/fstab 配置文件，加入NFS共享目录的挂载设置。注意将文件系统类型设为nfs，挂载参数建议添加_netdev(设备需要网络)； 若添加 soft ，intr 参数可以实现软过载，允许在网络中断时放弃挂载。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@ns2 ~]<span class="comment"># vim /etc/fstab </span></span><br><span class="line">…… //省略部分信息</span><br><span class="line">192.168.7.250:/opt/wwwroot /var/www/html nfs  defaults,_netdev 0 0</span><br><span class="line"></span><br><span class="line">:wq</span><br></pre></td></tr></table></figure>
+<h3 id="强制卸载-NFS"><a href="#强制卸载-NFS" class="headerlink" title="强制卸载 NFS"></a>强制卸载 NFS</h3><p>NFS 客户端与服务器端的耦合度非常高的，如果客户端正在挂载使用，服务器端的NFS服务突然间停掉了，那么客户端就会出现执行df -h 命令卡死的现象。这个时候使用umont 命令是无法直接卸载的，需要加上 -lf 才能卸载。<br>    当出现卡死现象时，要重新开一终端，执行 cat/etc/rc.local 命令，查看挂载点。<br>    然后使用 umonut命令卸载，其中 -l表示解除正在繁忙的文件系统， -f表示强制。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@ns2 ~]<span class="comment"># umount /mnt</span></span><br><span class="line">umount: /mnt：目标忙。</span><br><span class="line">        (有些情况下通过 lsof(8) 或 fuser(1) 可以</span><br><span class="line">         找到有关使用该设备的进程的有用信息) </span><br><span class="line">[root@ns2 ~]<span class="comment"># umount -lf /mnt</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="NFS-常见故障解决思路"><a href="#NFS-常见故障解决思路" class="headerlink" title="NFS 常见故障解决思路"></a>NFS 常见故障解决思路</h3><p>当NFS共享无法挂载使用时，首先要检查配置文件的正确性，查看是否允许该网段的访问，然后将服务端的NFS服务和rpcbind服务都要开启，同时客户端也要开启rpcbind服务，这是能够成功挂载使用NFS共享存储的大前提。<br>在两边服务器都开启的情况下，如果客户端挂载共享存储出现长时间挂载等待的情况，此时要ping服务器的地址，检测客户端到服务器端的网络是否正常。<br>如果客户端到服务器端的网络是没有问题的，但是还是无法 mount挂载使用，可以使用 telntr 命令加服务器端的地址和端口号，远程连接服务器。当出现“connected to ……”的字样时，表示已经连接上了。这就表示客户端与服务器是通的。<br>客户端无法正常访问服务器端，也有可能是 iptables导致的，使用telnet 命令连接服务器时会显示“no route to host”的字样，这就表示时防火墙的问题。在服务器端本地 telnet 自己，如果正常就表示服务器端时没有问题的。<br>当然也可以使用 showmount -e 命令检查，或者是在服务端 mount 挂载自己本地共享的目录看能否挂载成功。</p>
+<h3 id="NFS-客户端mount-的挂载参数说明"><a href="#NFS-客户端mount-的挂载参数说明" class="headerlink" title="NFS 客户端mount 的挂载参数说明"></a>NFS 客户端mount 的挂载参数说明</h3><p>在linux 系统中，可以使用 mount命令挂载光盘镜像文件，移动硬盘，U盘以及Windows 网络共享和UNIX NFS网络共享。</p>
+<h4 id="mount-o-命令后面常用参数"><a href="#mount-o-命令后面常用参数" class="headerlink" title="mount -o 命令后面常用参数"></a>mount -o 命令后面常用参数</h4><p>noatime ：不更新文件系统上的inode访问时间，高并发环境下应该使用该选项，可以提高1/0 性能。<br>nodiratime ：不更新文件系统上的 directory inode 访问时间，高并发环境下推荐使用该选项，可以提高1/0 性能。<br>noexec ：不允许执行程序，但是 shell，PHP 程序还是可以执行的。<br>nosuid ：不允许设置 uid。<br>remount ：尝试重新挂载一个已经挂载了的文件系统，这通常被用来改变文件系统的挂载标志，从而使得一个只读文件系统变得可写，这个动作不会改变设备或者挂载点。<br>ro ：挂载一个只读文件系统。<br>rw ：挂载一个可写的文件系统。<br>sync ：有 1/0操作时，会同步处理 1/0，把数据同步写入硬盘。使用此参数会影响1/0性能，但是可以保证数据的安全性。</p>
+<h3 id="mount-挂载及-fstab-文件的参数表格"><a href="#mount-挂载及-fstab-文件的参数表格" class="headerlink" title="mount 挂载及 fstab 文件的参数表格"></a>mount 挂载及 fstab 文件的参数表格</h3><h3 id="查看客户端挂载的参数"><a href="#查看客户端挂载的参数" class="headerlink" title="查看客户端挂载的参数"></a>查看客户端挂载的参数</h3><p>在Linux 下使用 “grep mnt /proc/mounts” 命令可以查看客户端挂载参数。</p>
+<h3 id="本章总结"><a href="#本章总结" class="headerlink" title="本章总结"></a>本章总结</h3><p>YUM 软件仓库主要通过 HTTP 或 FTP 方式进行发布，且需要提供 repodata 数据，其中包含所有 rpm包文件的头信息。<br>使用yum 命令查询软件包时，可用的子命令包括 list ，info，search，分别用于查询软件包列表，查询软件包的描述信息，查询指定的软件包。<br>使用 yum 命令安装，升级，卸载软件包时，对应的子命令分别为 install ，update，remove。<br>NFS 服务的实现依赖于 RPC机制，RPC 充当NFS 客户端和NFS 服务器的中介。在 CentOS 7 系统中，需要安装 nfs-utils ，rpcbind 软件包来提供 NFS共享服务，前者由于 NFS共享发布和访问，后者用于 RPC支持。<br>对 NFS 共享的访问使用 mount 命令来进行挂载，对应的文件系统类型为 nfs。既可以手动挂载，也可以加入 fstab 配置文件来实现开机自动挂载。</p>
+
+    
+
+    
+
+    
+
+  </div>
+  <div class="article-info article-info-index">
+    
+    
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">nfs</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+    
+
+    
+
+    
+    <div class="clearfix"></div>
+  </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-部署YUN仓库" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1283,6 +1389,10 @@
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">sed</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">firewalld</a>
               </li>
             
             <div class="clearfix"></div>
