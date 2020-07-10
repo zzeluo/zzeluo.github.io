@@ -10,15 +10,15 @@
   <meta name="generator" content="hexo-theme-yilia-plus">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   
-  <meta name="description" content="简介CentOS7里有几种防火墙共存：firewalld、iptables、ebtables，默认是使用firewalld来管理netfilter子系统，不过底层调用的命令仍然是iptables等。 Firewalld与iptables对比firewalld 是 iptables 的前端控制器iptables 静态防火墙 任一策略变更需要reload所有策略，丢失现有链接firewalld 动态防">
+  <meta name="description" content="简介防火墙是只设置在不同网络与网络安全与之间的一系列部件的场合，也是不同安全与之间信息的唯一出口。通过监测、限制并更改跨越防火墙的数据流，尽可能的对外屏蔽网络内部的信息、结构和运行状态，且有选择地接受外部网络访问。在内外网之间架起一道屏障，以避免发生不可预知或潜在的入侵。从传统意义上来说防火墙技术分为三类：包过滤（Packet Filtering）、应用代理（Application Proxy）、">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Linux 防火墙">
 <meta property="og:url" content="http://yoursite.com/2020/07/11/Linux%E9%98%B2%E7%81%AB%E5%A2%99/index.html">
 <meta property="og:site_name" content="择萝">
-<meta property="og:description" content="简介CentOS7里有几种防火墙共存：firewalld、iptables、ebtables，默认是使用firewalld来管理netfilter子系统，不过底层调用的命令仍然是iptables等。 Firewalld与iptables对比firewalld 是 iptables 的前端控制器iptables 静态防火墙 任一策略变更需要reload所有策略，丢失现有链接firewalld 动态防">
+<meta property="og:description" content="简介防火墙是只设置在不同网络与网络安全与之间的一系列部件的场合，也是不同安全与之间信息的唯一出口。通过监测、限制并更改跨越防火墙的数据流，尽可能的对外屏蔽网络内部的信息、结构和运行状态，且有选择地接受外部网络访问。在内外网之间架起一道屏障，以避免发生不可预知或潜在的入侵。从传统意义上来说防火墙技术分为三类：包过滤（Packet Filtering）、应用代理（Application Proxy）、">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-07-11T06:02:13.000Z">
-<meta property="article:modified_time" content="2020-07-10T13:32:41.221Z">
+<meta property="article:modified_time" content="2020-07-10T13:56:42.454Z">
 <meta property="article:author" content="择萝">
 <meta property="article:tag" content="firewalld">
 <meta name="twitter:card" content="summary">
@@ -170,7 +170,7 @@
       <!-- 百度字体平台:http://fontstore.baidu.com/static/editor/index.html -->
       <i class="icon-statistics"></i>
       <span class="post-meta-item-text"> 字数统计:</span>
-      <span class="post-count">938字</span>
+      <span class="post-count">3.2k字</span>
     </span>
   </span>
 
@@ -179,7 +179,7 @@
     <span class="post-meta-item-icon">
       <i class="icon-book icon"></i>
       <span class="post-meta-item-text"> 阅读时长≈</span>
-      <span class="post-count">3分</span>
+      <span class="post-count">12分</span>
     </span>
   </span>
 </div>
@@ -190,12 +190,13 @@
   
   <div class="article-entry" itemprop="articleBody">
     
-    <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>CentOS7里有几种防火墙共存：firewalld、iptables、ebtables，默认是使用firewalld来管理netfilter子系统，不过底层调用的命令仍然是iptables等。</p>
+    <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>防火墙是只设置在不同网络与网络安全与之间的一系列部件的场合，也是不同安全与之间信息的唯一出口。通过监测、限制并更改跨越防火墙的数据流，尽可能的对外屏蔽网络内部的信息、结构和运行状态，且有选择地接受外部网络访问。在内外网之间架起一道屏障，以避免发生不可预知或潜在的入侵。从传统意义上来说防火墙技术分为三类：包过滤（Packet Filtering）、应用代理（Application Proxy）、状态检测（Stateful Inspection）。<br>Linux的防火墙体系主要工作网络层，针对TCP/IP数据包实施过滤和限制，属于典型的包过滤防火墙（或称为网络层防火墙）。Linux系统的防火墙体系基于内核编码实现，具有非常稳定的性能和高效率，也因此获得广泛的应用。在CentOS7系统中几种防火墙共存：firewalld、iptables、ebtables，默认是用firewalld来管理netfilter子系统。<br>netfilter：指的是Linux内核中实现包过滤防火墙的内部结构，不以程序或文件的形式存在，属于“内核态”（Kernel Space，又称为内核空间）的防火墙的功能体系。<br>firewalld：指用于管理Linux防火墙的命令程序，属于“用户态”（User Space，又称为用户空间）的防火墙管理体系。</p>
+<h3 id="firewalld简介"><a href="#firewalld简介" class="headerlink" title="firewalld简介"></a>firewalld简介</h3><p>firewalld的作用是为包括过滤机制提供匹配规则（或称为策略），通过各种不同的规则，告诉netfilter对来自指定源，前往指定目的或具有某些协议特征的数据包采取何种处理方式。为了更方便地组织和管理防火墙，firewalld提供了支持网络区域链接以及接口安全等级的动态防火墙管理工具。它支持IPv4、IPv6防火墙设置以及以太网桥，并拥有两种配置模式：运行时配置与永久配置。它还支持服务或应用程序直接添加防火墙规则接口。</p>
 <h3 id="Firewalld与iptables对比"><a href="#Firewalld与iptables对比" class="headerlink" title="Firewalld与iptables对比"></a>Firewalld与iptables对比</h3><p>firewalld 是 iptables 的前端控制器<br>iptables 静态防火墙 任一策略变更需要reload所有策略，丢失现有链接<br>firewalld 动态防火墙 任一策略变更不需要reload所有策略 将变更部分保存到iptables,不丢失现有链接<br>firewalld 提供一个daemon和service 底层使用iptables<br>基于内核的Netfilter</p>
 <h3 id="firewalld跟iptables比起来至少有两大好处："><a href="#firewalld跟iptables比起来至少有两大好处：" class="headerlink" title="firewalld跟iptables比起来至少有两大好处："></a>firewalld跟iptables比起来至少有两大好处：</h3><p>1）irewalld可以动态修改单条规则，而不需要像iptables那样，在修改了规则后必须得全部刷新才可以生效；</p>
 <p>2）firewalld在使用上要比iptables人性化很多，即使不明白“五张表五条链”而且对TCP/IP协议也不理解也可以实现大部分功能。<br>firewalld跟iptables比起来，不好的地方是每个服务都需要去设置才能放行，因为默认是拒绝。而iptables里默认是每个服务是允许，需要拒绝的才去限制。<br>firewalld自身并不具备防火墙的功能，而是和iptables一样需要通过内核的netfilter来实现，也就是说firewalld和 iptables一样，他们的作用都是用于维护规则，而真正使用规则干活的是内核的netfilter，只不过firewalld和iptables的结构以及使用方法不一样罢了。</p>
-<h3 id="一个重要的概念：区域管理"><a href="#一个重要的概念：区域管理" class="headerlink" title="一个重要的概念：区域管理"></a>一个重要的概念：区域管理</h3><p>通过将网络划分成不同的区域，制定出不同区域之间的访问控制策略来控制不同程序区域间传送的数据流。例如，互联网是不可信任的区域，而内部网络是高度信任的区域。网络安全模型可以在安装，初次启动和首次建立网络连接时选择初始化。该模型描述了主机所连接的整个网络环境的可信级别，并定义了新连接的处理方式。有如下几种不同的初始化区域：</p>
-<table>
+<h3 id="firewalld-网络区域"><a href="#firewalld-网络区域" class="headerlink" title="firewalld 网络区域"></a>firewalld 网络区域</h3><p>firewalld网络区域<br>firewalld将所有的网络数据流量划分为多个区域，从而简化防火墙的管理。根据数据包的源IP地址或传入网络接口等条件，将数据流量传入相应的区域的防火墙规则。对于进入系统的数据包，首先检查的就是其源地址。<br>（1）若源地址关联到特定的区域，则执行该区域所制定的规则。<br>（2）若源地址未关联特定的区域，则使用传入网络接口的区域并执行该区域所制定的规则。<br>（3）若网络接口未关联到特定的区域，则使用默认区域执行该区域所制定的规则</p>
+<h3 id="firewalld-的预定义区域说明"><a href="#firewalld-的预定义区域说明" class="headerlink" title="firewalld 的预定义区域说明"></a>firewalld 的预定义区域说明</h3><table>
 <thead>
 <tr>
 <th>网络区名称</th>
@@ -243,6 +244,204 @@
 </table><p><strong>注：FirewallD的默认区域是public。</strong></p>
 <p><strong>firewalld默认提供了九个zone配置文件：block.xml、dmz.xml、drop.xml、external.xml、 home.xml、internal.xml、public.xml、trusted.xml、work.xml，他们都保存在“/usr/lib /firewalld/zones/”目录下。</strong></p>
 <h2><a id="2Firewalld_43"></a>2.Firewalld策略管理</h2>
+
+<h3 id="firewalld防火墙的配置方法"><a href="#firewalld防火墙的配置方法" class="headerlink" title="firewalld防火墙的配置方法"></a>firewalld防火墙的配置方法</h3><p>配置firewalld的三种方式：<br>① firewall-config图形工具<br>② firewall-cmd命令行工具<br>③ /etc/firewalld/中的配置文件<br>不建议直接编辑配置文件，建议使用命令行工具。</p>
+<p><strong>firewall-cmd命令</strong></p>
+<ol>
+<li>启动、停止、查看firewalld服务<br>
+在安装CentOS7系统时，会自动安装firewalld和firewall-config。</li>
+</ol>
+<pre><code class="prism language-terminal">[root@localhost ~]# systemctl start firewalld        //启动firewalld
+[root@localhost ~]# systemctl enable firewalld        //设置firewalld为开机启动
+</code></pre>
+如果firewalld正在运行，通过systemctl status firewalld 或 firewall-cmd 命令可以查看其运行状态。<pre><code class="prism language-terminal">[root@localhost ~]# systemctl status firewalld
+或
+[root@localhost ~]# firewall-cmd --state
+running
+</code></pre>
+禁用firewalld，执行以下命令即可实现。<pre><code class="prism language-terminal">[root@localhost ~]# systemctl stop firewalld        //停止firewalld
+[root@localhost ~]# systemctl disable firewalld        //设置firewalld开机不自启动
+</code></pre>
+<ol start="2">
+<li>获取预定义信息<br>
+firewall-cmd预定义信息主要包括三种：可用的区域、可用的服务和可用的ICMP阻塞类型，具体命令如下所示。</li>
+</ol>
+<pre><code class="prism language-terminal">[root@localhost ~]# firewall-cmd  --get-zones        //显示预定义的区域
+[root@localhost ~]# firewall-cmd  --get-service        //显示预定义的服务
+[root@localhost ~]# firewall-cmd  --get-icmptypes    //显示预定义的ICMP类型
+</code></pre>
+</li>
+</ol>
+<p><strong>firewall-cmd --get-icmptypes命令的执行结果中各种阻塞类型的含义分别如下所示。</strong></p>
+<pre><code class="prism language-t">destination-unreachable：目标地址不可达。
+echo-reply：应答回应（pong）。
+parameter-problem：参数问题。
+redirect：重新定向。
+router-adverisement：路由通告。
+router-solicitaion：路由器征询。
+source-quench：源端抑制。
+time-exceeded：超时。
+timestamp-reply：时间戳应答回应。
+timestamp-request：时间戳请求。
+</code></pre>
+<ol start="3">
+<li>区域管理<br>
+使用firewall-cmd命令可以实现获取和管理区域，为指定区域绑定网络接口等功能。下表中列出了firewall-cmd命令的区域管理选项说明。</li>
+</ol>
+<p><strong>firewall-cmd 命令的区域管理选项说明</strong></p>
+
+<table>
+<thead>
+<tr>
+<th>选项</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>–get-default-zone</td>
+<td>显示网络连接或接口的默认区域</td>
+</tr>
+<tr>
+<td>–set-default-zone=&lt; zone&gt;</td>
+<td>设置网络连接或接口的默认区域</td>
+</tr>
+<tr>
+<td>–get-active-zones</td>
+<td>显示已经激活的所有区域</td>
+</tr>
+<tr>
+<td>–get-zone-of-interface=&lt; interface&gt;</td>
+<td>显示指定接口绑定的区域</td>
+</tr>
+<tr>
+<td>–zone=&lt; zone&gt; --add-interface=&lt; interface&gt;</td>
+<td>为指定的接口绑定区域</td>
+</tr>
+<tr>
+<td>–zone=&lt; zone&gt; --change-interface=&lt; interface&gt;</td>
+<td>为指定的区域更改绑定的网络接口</td>
+</tr>
+<tr>
+<td>–zone=&lt; zone&gt; --remove-interface=&lt; interface&gt;</td>
+<td>为指定的区域删除绑定的网络接口</td>
+</tr>
+<tr>
+<td>–list-all-zones</td>
+<td>显示所有区域及其规则</td>
+</tr>
+<tr>
+<td>[–zone=&lt; zone&gt;] --list-all</td>
+<td>显示所有指定区域的所有规则，省略–zone=&lt; zone&gt;时仅对默认区域操作</td>
+</tr>
+</tbody>
+</table><p>具体操作如下所示。<br>
+(1) 显示当前系统中的默认区域</p>
+<pre><code class="prism language-terminal">[root@localhost ~]# firewall-cmd --get-default-zone
+public
+</code></pre>
+<p>(2) 显示默认区域的所有规则。</p>
+<pre><code class="prism language-terminal">[root@localhost ~]# firewall-cmd --list-all
+</code></pre>
+<p>(3) 显示网络接口ens33对应区域</p>
+<pre><code class="prism language-terminal">[root@localhost ~]# firewall-cmd --get-zone-of-interface=ens33
+public
+</code></pre>
+<p>(4)将网络接口ens33对应区域更改为internal区域。</p>
+<pre><code class="prism language-terminal">[root@localhost ~]# firewall-cmd --zone=internal --change-interface=ens33
+The interface is under control of NetworkManager，setting zone to 'internal'
+success
+[root@localhost ~]# firewall-cmd --zone=internal --list-interfaces
+ens33
+[root@localhost ~]# firewall-cmd --get-zone-of-interface=ens33
+internal
+</code></pre>
+<p>(5) 显示所有激活区域</p>
+<pre><code class="prism language-terminal">[root@localhost ~]# firewall-cmd --get-active-zones
+internal
+    interfaces: ens33
+</code></pre>
+<ol start="4">
+<li>服务管理<br>
+为了方便管理，firewalld预先定义了很多服务，存放在/usr/lib/firewalld/service/目录中，服务通过单个的XML配置文件来指定。这些配置文件则按以下格式命名：service-name.xml ，每个文件对应一项具体的网络服务，如ssh服务等。与之对应的配置文件中记录了各种服务所使用的tcp/udp端口。在最新版本的firewalld中默认已经定义了70多种服务供我们使用，对于每个网络区域，均可配置允许访问的服务。当默认提供的服务不适应或者需要自定义某项服务的端口时，我们需要将service配置文件放置在/etcdirewalld/service/目录中。service配置有以下优点。<br>
+（1）通过服务名字来管理规则更加人性化。<br>
+（2）通过服务来组织端口分组的模式更加高效，如果一个服务使用了若干个网络端口，则服务的配置文件就相当于提供了到这些端口的规则管理的批量操作快捷方式。<br>
+<strong>firewall-cmd 命令区域中服务管理的常用选项说明</strong></li>
+</ol>
+
+<table>
+<thead>
+<tr>
+<th>选项</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[–zone=&lt; zone&gt;] --list-services</td>
+<td>显示指定区域内允许访问的所有服务</td>
+</tr>
+<tr>
+<td>[–zone=&lt; zone&gt;] --add-service=&lt; service&gt;</td>
+<td>为指定区域设置允许访问的某项服务</td>
+</tr>
+<tr>
+<td>[–zone=&lt; zone&gt;] --remove-service=&lt; service&gt;</td>
+<td>删除指定区域已设置的允许访问的某项服务</td>
+</tr>
+<tr>
+<td>[–zone=&lt; zone&gt;] --list-ports</td>
+<td>显示指定区域内允许访问的所有端口号</td>
+</tr>
+<tr>
+<td>[–zone=&lt; zone&gt;] --add-port=&lt; portid&gt;[-&lt; portid&gt;]/&lt; protocol&gt;</td>
+<td>为指定区域设置允许访问的某个/某段端口号（包括协议名）</td>
+</tr>
+<tr>
+<td>[–zone=&lt; zone&gt;] --remove-port=&lt; portid&gt;[-&lt; portid&gt;]/&lt; protocol&gt;</td>
+<td>删除指定区域已设置的允许访问的端口号（包括协议名）</td>
+</tr>
+<tr>
+<td>[–zone=&lt; zone&gt;] --list-icmp-blocks</td>
+<td>显示指定区域内拒绝访问的所有ICMP类型</td>
+</tr>
+<tr>
+<td>[–zone=&lt; zone&gt;] --add-icmp-block=&lt; icmptype&gt;</td>
+<td>为指定区域设置拒绝访问的某项ICMP类型</td>
+</tr>
+<tr>
+<td>[–zone=&lt; zone&gt;] --remove-icmp-block=&lt; icmptype&gt;</td>
+<td>删除指定区域已设置的拒绝访问的某项ICMP类型，省略–zone=&lt; zone&gt;时表示对默认区域操作</td>
+</tr>
+</tbody>
+</table><p>具体操作如下所示。<br>
+(1) 为默认区域设置允许访问的服务</p>
+<pre><code class="prism language-terminal">[root@localhost ~]# firewall-cmd --list-services        //显示默认区域内允许访问的所有服务
+dhcpv6-client ssh
+[root@localhost ~]# firewall-cmd --add-service=http        //设置默认区域允许访问http服务
+success
+[root@localhost ~]# firewall-cmd --add-service=https    //设置默认区域允许访问https服务
+success
+[root@localhost ~]# firewall-cmd --list-services    
+dhcpv6-client ssh https http
+</code></pre>
+<p>(2) 为internal区域设置允许访问的服务</p>
+<pre><code class="prism language-terminal">[root@localhost ~]# firewall-cmd --zone=internal --add-service=mysql            //设置internal区域允许访问mysql服务
+success
+[root@localhost ~]# firewall-cmd --zone=internal --remove-service=samba-client    //设置internal区域不允许访问samba-client服务
+success
+[root@localhost ~]# firewall-cmd --zone=internal --list-services                //显示internal区域内允许访问的所有服务
+ssh mdns dhcpv6-client mysql
+</code></pre>
+<ol start="5">
+<li>两种配置模式<br>
+firewall-cmd命令工具有两种配置模式：运行时模式（Runtime mode）表示当前内存中运行的防火墙配置，在系统或firewalld服务重启，停止时配置将失效；永久模式（Permanent mode）表示重启防火墙配置或重新加载防火墙时的规则配置，时永久存储在配置文件中的。<br>
+firewall-cmd命令工具与配置模式相关的选项有三个：<br>
+（1）–reload：重新加载防火墙规则并保持状态信息，即将永久配置应用为运行时配置。<br>
+（2）–permanent：带有此选项的命令用于设置永久性规则，这些规则只有在重新启动或重新加载防火墙规则后才会生效；若不带此选                        项，表示用于设置运行时规则。<br>
+（3）–runtime-to-permanent：将当前的运行时配置写入规则配置文件中，使之成为永久性配置。</li>
+</ol>
+
 
 
     
